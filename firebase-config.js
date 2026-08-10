@@ -5,6 +5,5 @@ window.FIREBASE_CONFIG = {
   projectId: "stuffdrive-pas"
 };
 
-// URL вебхука (Google Apps Script), который постит новые заявки в топик группы.
-// Пока null — уведомления отключены. Заполняется на этапе 2.
-window.NOTIFY_WEBHOOK = null;
+// Вебхук (Google Apps Script): постит новые заявки в топик «Заявки» группы.
+window.NOTIFY_WEBHOOK = "https://script.google.com/macros/s/AKfycbwAOinpNUXY5NIAW-vznHcZ0AEatdC-zaZcaUQwwSpgIqbyTU68hZAOVcsH5mb4LY4ZKQ/exec";
