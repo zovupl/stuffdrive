@@ -1,8 +1,9 @@
-// Конфиг Firebase. Пока null — приложение работает в демо-режиме (8 демо-машин,
-// заявки сохраняются только локально). После создания проекта Firebase сюда
-// вписывается объект вида { apiKey: "...", projectId: "..." } — и приложение
-// автоматически начинает читать машины и писать заявки в Firestore.
-window.FIREBASE_CONFIG = null;
+// Конфиг Firebase (проект stuffdrive-pas, zovu.pl@gmail.com).
+// apiKey — публичный идентификатор (не секрет); доступ ограничен правилами Firestore.
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB8hanCKlazB5K9CWq6SnqKj9faay6jCJU",
+  projectId: "stuffdrive-pas"
+};
 
 // URL вебхука (Google Apps Script), который постит новые заявки в топик группы.
 // Пока null — уведомления отключены. Заполняется на этапе 2.

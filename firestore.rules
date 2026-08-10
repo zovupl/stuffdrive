@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Каталог машин: читать могут все, писать — только владелец (через консоль/CLI)
+    match /cars/{carId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Заявки: клиент может только создать; читать/менять — только владелец
+    match /bookings/{bookingId} {
+      allow create: if request.resource.data.keys().hasAll(['carName','from','to','name','phone'])
+                    && request.resource.data.name is string
+                    && request.resource.data.phone is string;
+      allow read, update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
