@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pablo Auto Spain — Alquiler de coches en Barcelona</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --ink:#0F2A3D;
+  --ink-soft:#5A7488;
+  --paper:#FBF6EC;
+  --paper-soft:#F1E9D8;
+  --gold:#E8A33D;
+  --terracotta:#D9542E;
+  --teal:#2F8F7B;
+  --line: rgba(15,42,61,0.14);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;}
+body{
+  font-family:'Manrope', sans-serif;
+  background:
+    radial-gradient(600px 400px at 50% -10%, #1A4A63, transparent),
+    radial-gradient(500px 380px at 80% 0%, rgba(232,163,61,0.18), transparent 60%),
+    var(--ink);
+  color:var(--paper);
+  display:flex;
+  justify-content:center;
+}
+
+#app{
+  width:100%;
+  max-width:430px;
+  height:100vh;
+  height:100dvh;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* ---------- HEADER ---------- */
+.header{
+  padding:18px 20px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.brand{display:flex; flex-direction:column; gap:2px;}
+.brand .eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.brand h1{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:22px;
+  margin:0;
+  color:var(--paper);
+}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(251,246,236,0.08);
+  border:1px solid rgba(251,246,236,0.18);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--paper);
+  cursor:pointer;
+}
+.icon-btn:active{background:rgba(251,246,236,0.18);}
+
+.demo-badge{
+  position:absolute;
+  top:64px; left:50%;
+  transform:translateX(-50%);
+  z-index:15;
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink);
+  background:var(--gold);
+  padding:4px 12px;
+  border-radius:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  display:none;
+}
+.demo-badge.show{display:block;}
+
+/* ---------- DECK ---------- */
+.deck-wrap{
+  flex:1;
+  position:relative;
+  padding:6px 18px 0;
+  min-height:0;
+}
+.deck{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+.deck-loading{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(251,246,236,0.6);
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+}
+.card{
+  position:absolute;
+  inset:0;
+  background:var(--paper);
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.4) inset;
+  display:flex;
+  flex-direction:column;
+  touch-action:pan-y;
+  will-change:transform;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s;
+}
+.card.dragging{transition:none;}
+
+.card-photo{
+  position:relative;
+  height:52%;
+  flex-shrink:0;
+  background:
+    radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.5), transparent 60%),
+    var(--photo-bg, #E4D9BE);
+  display:flex;align-items:center;justify-content:center;
+}
+.card-photo svg{width:78%;height:78%;}
+.card-photo img{width:100%;height:100%;object-fit:cover;}
+
+.class-stamp{
+  position:absolute;
+  top:16px; right:16px;
+  padding:6px 12px;
+  border:1.5px dashed var(--ink);
+  border-radius:50px;
+  transform:rotate(6deg);
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink);
+  background:rgba(251,246,236,0.55);
+  backdrop-filter:blur(2px);
+}
+
+.card-photo .years{
+  position:absolute;
+  bottom:14px; left:16px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+  background:rgba(251,246,236,0.6);
+  padding:4px 9px;
+  border-radius:20px;
+}
+
+/* perforation divider */
+.perf{
+  position:relative;
+  height:0;
+  border-top:2.5px dashed var(--line);
+  margin:0 0;
+}
+.perf::before,.perf::after{
+  content:'';
+  position:absolute;
+  top:-13px;
+  width:26px;height:26px;
+  border-radius:50%;
+  background:var(--ink);
+}
+.perf::before{left:-31px;}
+.perf::after{right:-31px;}
+
+.card-details{
+  flex:1;
+  padding:20px 20px 16px;
+  overflow-y:auto;
+  min-height:0;
+}
+.card-details h2{
+  font-family:'Fraunces', serif;
+  font-size:26px;
+  font-weight:600;
+  margin:0 0 2px;
+  color:var(--ink);
+}
+.card-details .subline{
+  font-size:13px;
+  color:var(--ink-soft);
+  margin-bottom:14px;
+}
+
+.spec-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-bottom:14px;
+}
+.spec-chip{
+  background:var(--paper-soft);
+  border-radius:12px;
+  padding:8px 10px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.spec-chip .k{
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--ink-soft);
+  font-family:'JetBrains Mono', monospace;
+}
+.spec-chip .v{
+  font-size:13px;
+  font-weight:700;
+  color:var(--ink);
+}
+
+.features{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:16px;
+}
+.feature-tag{
+  font-size:11px;
+  color:var(--teal);
+  background:rgba(47,143,123,0.1);
+  border:1px solid rgba(47,143,123,0.3);
+  padding:4px 10px;
+  border-radius:20px;
+  font-weight:600;
+}
+
+.price-row{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+}
+.price-row .amount{
+  font-family:'Fraunces', serif;
+  font-size:28px;
+  font-weight:700;
+  color:var(--terracotta);
+}
+.price-row .unit{
+  font-size:12px;
+  color:var(--ink-soft);
+  font-family:'JetBrains Mono', monospace;
+}
+
+/* dots */
+.dots{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  padding:10px 0 4px;
+  flex-shrink:0;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(251,246,236,0.25);
+  transition:all .25s;
+}
+.dot.active{
+  width:20px;
+  border-radius:4px;
+  background:var(--gold);
+}
+
+.swipe-hint{
+  text-align:center;
+  font-size:11px;
+  color:rgba(251,246,236,0.45);
+  font-family:'JetBrains Mono', monospace;
+  padding-bottom:2px;
+  flex-shrink:0;
+}
+
+/* ---------- CTA BAR ---------- */
+.cta-bar{
+  padding:10px 18px calc(16px + var(--safe-bottom));
+  flex-shrink:0;
+}
+.book-btn{
+  width:100%;
+  border:none;
+  border-radius:18px;
+  background:var(--terracotta);
+  color:#fff;
+  font-family:'Manrope', sans-serif;
+  font-weight:800;
+  font-size:16px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(217,84,46,0.4);
+}
+.book-btn:active{transform:scale(0.98);}
+
+/* ---------- SHEETS ---------- */
+.overlay{
+  position:absolute; inset:0;
+  background:rgba(15,42,61,0.55);
+  opacity:0; pointer-events:none;
+  transition:opacity .25s;
+  z-index:20;
+}
+.overlay.show{opacity:1; pointer-events:auto;}
+
+.sheet{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  background:var(--paper);
+  border-radius:26px 26px 0 0;
+  padding:10px 22px calc(22px + var(--safe-bottom));
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.2,.8,.2,1);
+  z-index:21;
+  max-height:88%;
+  overflow-y:auto;
+  color:var(--ink);
+}
+.sheet.show{transform:translateY(0);}
+.sheet-handle{
+  width:38px;height:4px;border-radius:4px;
+  background:var(--line);
+  margin:6px auto 14px;
+}
+.sheet h3{
+  font-family:'Fraunces', serif;
+  font-size:20px;
+  margin:0 0 4px;
+}
+.sheet .sheet-sub{
+  font-size:13px;
+  color:var(--ink-soft);
+  margin-bottom:16px;
+}
+
+.field{margin-bottom:14px;}
+.field label{
+  display:block;
+  font-size:11px;
+  font-family:'JetBrains Mono', monospace;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.field input, .field textarea{
+  width:100%;
+  border:1.5px solid var(--line);
+  border-radius:12px;
+  padding:12px 13px;
+  font-family:'Manrope', sans-serif;
+  font-size:15px;
+  color:var(--ink);
+  background:var(--paper-soft);
+}
+.field input:focus, .field textarea:focus{
+  outline:none;
+  border-color:var(--teal);
+}
+.date-row{display:flex; gap:10px;}
+.date-row .field{flex:1;}
+
+.confirm-btn{
+  width:100%;
+  border:none;
+  border-radius:16px;
+  background:var(--teal);
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  padding:15px;
+  cursor:pointer;
+  margin-top:4px;
+}
+.confirm-btn:active{transform:scale(0.98);}
+.confirm-btn:disabled{opacity:0.5;}
+
+.err{
+  color:var(--terracotta);
+  font-size:12px;
+  margin:-8px 0 10px;
+  display:none;
+}
+.err.show{display:block;}
+
+/* requests list */
+.req-item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:10px;
+}
+.req-item .top{
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:4px;
+}
+.req-item .car{font-weight:800; font-size:14px;}
+.req-item .when{font-size:11px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;}
+.req-item .meta{font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
+.req-empty{
+  text-align:center;
+  padding:30px 10px;
+  color:var(--ink-soft);
+  font-size:13px;
+}
+.clear-link{
+  display:block;
+  text-align:center;
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-top:14px;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+/* stamp overlay */
+#stampOverlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(15,42,61,0.7);
+  opacity:0; pointer-events:none;
+  transition:opacity .25s;
+  z-index:30;
+}
+#stampOverlay.show{opacity:1;}
+.stamp{
+  border:4px double var(--teal);
+  border-radius:16px;
+  padding:18px 34px;
+  transform:rotate(-8deg) scale(0.7);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;
+}
+#stampOverlay.show .stamp{transform:rotate(-8deg) scale(1);}
+.stamp .t1{
+  font-family:'Fraunces', serif;
+  font-weight:700;
+  font-size:24px;
+  color:var(--teal);
+  letter-spacing:0.03em;
+}
+.stamp .t2{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  color:var(--teal);
+  margin-top:4px;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+
+::-webkit-scrollbar{width:0;height:0;}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="header">
+    <div class="brand">
+      <span class="eyebrow">Barcelona · Alquiler</span>
+      <h1 id="counterTitle">Coches</h1>
+    </div>
+    <div class="icon-btn" id="reqBtn" title="Mis solicitudes">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2" rx="3"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <div class="demo-badge" id="demoBadge">Modo demo</div>
+
+  <div class="deck-wrap">
+    <div class="deck" id="deck">
+      <div class="deck-loading">Cargando coches…</div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- booking sheet -->
+    <div class="sheet" id="bookingSheet">
+      <div class="sheet-handle"></div>
+      <h3 id="bookCarName">Reservar coche</h3>
+      <div class="sheet-sub" id="bookCarSub">Completa los datos y te contactaremos para confirmar.</div>
+
+      <div class="date-row">
+        <div class="field">
+          <label>Recogida</label>
+          <input type="date" id="dateFrom">
+        </div>
+        <div class="field">
+          <label>Devolución</label>
+          <input type="date" id="dateTo">
+        </div>
+      </div>
+      <div class="err" id="dateErr">La fecha de devolución debe ser posterior a la de recogida.</div>
+
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" id="nameInput" placeholder="Tu nombre">
+      </div>
+      <div class="field">
+        <label>Teléfono / Telegram</label>
+        <input type="tel" id="phoneInput" placeholder="+34 ...">
+      </div>
+      <div class="field">
+        <label>Comentario (opcional)</label>
+        <textarea id="noteInput" rows="2" placeholder="Hora de recogida, aeropuerto, etc."></textarea>
+      </div>
+      <div class="err" id="formErr">Rellena nombre y teléfono para continuar.</div>
+
+      <button class="confirm-btn" id="confirmBtn">Confirmar solicitud</button>
+    </div>
+
+    <!-- my requests sheet -->
+    <div class="sheet" id="requestsSheet">
+      <div class="sheet-handle"></div>
+      <h3>Mis solicitudes</h3>
+      <div class="sheet-sub">Solicitudes enviadas desde este dispositivo.</div>
+      <div id="reqList"></div>
+      <div class="clear-link" id="clearReq">Borrar historial local</div>
+    </div>
+
+    <div id="stampOverlay">
+      <div class="stamp">
+        <div class="t1">Reservado</div>
+        <div class="t2">Te contactaremos pronto</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+  <div class="swipe-hint">← desliza para ver más coches →</div>
+
+  <div class="cta-bar">
+    <button class="book-btn" id="mainBookBtn">
+      Reservar este coche
+    </button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  if (tg) {
+    try{
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor && tg.setHeaderColor('#0F2A3D');
+      tg.setBackgroundColor && tg.setBackgroundColor('#0F2A3D');
+    }catch(e){}
+  }
+  function haptic(kind){
+    try{ tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(kind||'light'); }catch(e){}
+  }
+  function notify(kind){
+    try{ tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(kind); }catch(e){}
+  }
+
+  // ---------- demo fleet (fallback cuando no hay Firebase) ----------
+  const DEMO_CARS = [
+    {id:'c1', name:'Fiat 500 Cabrio', cls:'Compacto', shape:'low', color:'#E9D6C0', priceperday:39, year:'2022', seats:4, doors:3, trans:'Manual', fuel:'Gasolina', consumo:'5.2 L', features:['A/C','Bluetooth','Descapotable']},
+    {id:'c2', name:'VW T-Roc', cls:'SUV', shape:'tall', color:'#D8E1DE', priceperday:59, year:'2023', seats:5, doors:5, trans:'Automático', fuel:'Diésel', consumo:'5.6 L', features:['A/C','CarPlay','Techo panorámico']},
+    {id:'c3', name:'Mini Cooper S', cls:'Compacto', shape:'mid', color:'#E3C9C1', priceperday:49, year:'2021', seats:4, doors:3, trans:'Manual', fuel:'Gasolina', consumo:'6.0 L', features:['A/C','Bluetooth']},
+    {id:'c4', name:'Mercedes Clase C', cls:'Premium', shape:'mid', color:'#D9D9D9', priceperday:89, year:'2023', seats:5, doors:4, trans:'Automático', fuel:'Híbrido', consumo:'4.8 L', features:['Cuero','CarPlay','Asist. carril']},
+    {id:'c5', name:'Fiat Panda', cls:'Económico', shape:'mid', color:'#EFE3C8', priceperday:29, year:'2020', seats:5, doors:5, trans:'Manual', fuel:'Gasolina', consumo:'5.4 L', features:['A/C','Radio USB']},
+    {id:'c6', name:'BMW X1', cls:'SUV', shape:'tall', color:'#CFE0DD', priceperday:75, year:'2022', seats:5, doors:5, trans:'Automático', fuel:'Diésel', consumo:'5.9 L', features:['A/C','CarPlay','Sensores']},
+    {id:'c7', name:'Renault Clio', cls:'Económico', shape:'mid', color:'#E4D2DA', priceperday:32, year:'2021', seats:5, doors:5, trans:'Manual', fuel:'Gasolina', consumo:'5.3 L', features:['A/C','Bluetooth']},
+    {id:'c8', name:'Tesla Model 3', cls:'Eléctrico', shape:'low', color:'#D6D9E0', priceperday:95, year:'2023', seats:5, doors:4, trans:'Automático', fuel:'Eléctrico', consumo:'0 L', features:['Autopilot','Carga rápida','CarPlay']},
+  ];
+
+  const FB = window.FIREBASE_CONFIG || null;
+  const MY_BOOKINGS_KEY = 'pas:my-bookings';
+
+  let cars = [];
+  let current = 0;
+  let activeBookingCar = null;
+
+  // ---------- Firestore REST helpers ----------
+  function fireBase(){
+    return 'https://firestore.googleapis.com/v1/projects/' + FB.projectId + '/databases/(default)/documents';
+  }
+  function fromFv(v){
+    if(v == null) return null;
+    if('stringValue' in v) return v.stringValue;
+    if('integerValue' in v) return parseInt(v.integerValue,10);
+    if('doubleValue' in v) return v.doubleValue;
+    if('booleanValue' in v) return v.booleanValue;
+    if('arrayValue' in v) return (v.arrayValue.values||[]).map(fromFv);
+    if('mapValue' in v){ const o={}; const f=v.mapValue.fields||{}; for(const k in f) o[k]=fromFv(f[k]); return o; }
+    return null;
+  }
+  function toFv(x){
+    if(x === null || x === undefined) return {nullValue:null};
+    if(typeof x === 'string') return {stringValue:x};
+    if(typeof x === 'number') return Number.isInteger(x) ? {integerValue:String(x)} : {doubleValue:x};
+    if(typeof x === 'boolean') return {booleanValue:x};
+    if(Array.isArray(x)) return {arrayValue:{values:x.map(toFv)}};
+    if(typeof x === 'object'){ const f={}; for(const k in x) f[k]=toFv(x[k]); return {mapValue:{fields:f}}; }
+    return {nullValue:null};
+  }
+  function docToObj(doc){
+    const o = {};
+    const f = doc.fields || {};
+    for(const k in f) o[k] = fromFv(f[k]);
+    o.id = doc.name.split('/').pop();
+    return o;
+  }
+
+  // ---------- data layer ----------
+  async function loadFleet(){
+    if(FB){
+      try{
+        const res = await fetch(fireBase() + '/cars?pageSize=300&key=' + FB.apiKey);
+        const data = await res.json();
+        if(data.documents && data.documents.length){
+          cars = data.documents.map(docToObj)
+            .filter(c => c.active !== false)
+            .sort((a,b) => (a.order||999) - (b.order||999) || String(a.name).localeCompare(String(b.name)));
+          return;
+        }
+      }catch(e){ /* cae al demo */ }
+    }
+    cars = DEMO_CARS;
+    document.getElementById('demoBadge').classList.add('show');
+  }
+
+  async function saveBooking(booking){
+    // 1) siempre en el historial local del dispositivo
+    try{
+      const mine = JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]');
+      mine.unshift(booking);
+      localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(mine.slice(0,50)));
+    }catch(e){}
+
+    // 2) a Firestore, si está configurado
+    if(FB){
+      const fields = {};
+      for(const k in booking) fields[k] = toFv(booking[k]);
+      const res = await fetch(fireBase() + '/bookings?key=' + FB.apiKey, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({fields})
+      });
+      if(!res.ok) throw new Error('firestore ' + res.status);
+    }
+
+    // 3) aviso al grupo (webhook), si está configurado — fire and forget
+    if(window.NOTIFY_WEBHOOK){
+      try{
+        fetch(window.NOTIFY_WEBHOOK, {
+          method:'POST',
+          body: JSON.stringify({type:'booking', booking})
+        }).catch(function(){});
+      }catch(e){}
+    }
+  }
+
+  function loadMyBookings(){
+    try{ return JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function clearMyBookings(){
+    try{ localStorage.removeItem(MY_BOOKINGS_KEY); }catch(e){}
+  }
+
+  // ---------- car illustration ----------
+  const SHAPES = {
+    low:  "M18,118 L18,96 Q18,86 34,80 L64,58 Q80,48 104,48 L214,48 Q236,48 252,62 L276,84 Q292,90 292,100 L292,118 Z",
+    mid:  "M18,118 L18,94 Q18,82 36,78 L66,58 Q84,40 112,40 L192,40 Q218,40 236,58 L262,78 Q292,82 292,96 L292,118 Z",
+    tall: "M14,118 L14,88 Q14,72 32,68 L58,52 Q78,32 108,32 L196,32 Q222,32 240,50 L266,68 Q298,72 298,90 L298,118 Z"
+  };
+  function carSVG(car){
+    const path = SHAPES[car.shape] || SHAPES.mid;
+    const color = car.color || '#E4D9BE';
+    return `
+    <svg viewBox="0 0 310 160" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="155" cy="128" rx="128" ry="10" fill="rgba(15,42,61,0.08)"/>
+      <path d="${path}" fill="${color}" stroke="#0F2A3D" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="70" y="70" width="170" height="2" fill="rgba(15,42,61,0.15)"/>
+      <circle cx="82" cy="120" r="24" fill="#0F2A3D"/>
+      <circle cx="82" cy="120" r="10" fill="${color}"/>
+      <circle cx="228" cy="120" r="24" fill="#0F2A3D"/>
+      <circle cx="228" cy="120" r="10" fill="${color}"/>
+    </svg>`;
+  }
+
+  // ---------- rendering ----------
+  const deck = document.getElementById('deck');
+  const dotsEl = document.getElementById('dots');
+  const counterTitle = document.getElementById('counterTitle');
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function renderDots(){
+    dotsEl.innerHTML = cars.map((_,i)=>`<div class="dot ${i===current?'active':''}"></div>`).join('');
+  }
+
+  function specsHTML(car){
+    const rows = [
+      ['Año', car.year],
+      ['Plazas', car.seats],
+      ['Puertas', car.doors],
+      ['Cambio', car.trans],
+      ['Combustible', car.fuel],
+      ['Consumo', car.consumo],
+    ].filter(([,v]) => v !== undefined && v !== null && v !== '');
+    return rows.map(([k,v])=>`<div class="spec-chip"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+  }
+
+  function cardHTML(car){
+    const photo = car.photo
+      ? `<img src="${esc(car.photo)}" alt="${esc(car.name)}" loading="lazy">`
+      : carSVG(car);
+    return `
+    <div class="card-photo" style="--photo-bg:${esc(car.color || '#E4D9BE')}">
+      ${photo}
+      <div class="class-stamp">${esc(car.cls)}</div>
+      <div class="years">${esc(car.year)}</div>
+    </div>
+    <div class="perf"></div>
+    <div class="card-details">
+      <h2>${esc(car.name)}</h2>
+      <div class="subline">${esc(car.cls)} · Barcelona</div>
+      <div class="spec-grid">${specsHTML(car)}</div>
+      <div class="features">${(car.features||[]).map(f=>`<div class="feature-tag">${esc(f)}</div>`).join('')}</div>
+      <div class="price-row">
+        <div class="amount">€${esc(car.priceperday)}</div>
+        <div class="unit">/ día</div>
+      </div>
+    </div>`;
+  }
+
+  function renderDeck(){
+    deck.innerHTML = '';
+    cars.forEach((car, i)=>{
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.dataset.index = i;
+      el.innerHTML = cardHTML(car);
+      let offset = i - current;
+      positionCard(el, offset, false);
+      deck.appendChild(el);
+      attachDrag(el);
+    });
+    renderDots();
+    counterTitle.textContent = `Coches · ${current+1}/${cars.length}`;
+  }
+
+  function positionCard(el, offset, animate){
+    el.style.transition = animate ? '' : 'none';
+    if(offset === 0){
+      el.style.transform = 'translateX(0) rotate(0deg)';
+      el.style.opacity = '1';
+      el.style.zIndex = 5;
+      el.style.pointerEvents = 'auto';
+    } else if(offset === 1 || offset === -1){
+      el.style.transform = `translateX(${offset*18}px) scale(0.94) rotate(${offset*3}deg)`;
+      el.style.opacity = '0';
+      el.style.zIndex = 1;
+      el.style.pointerEvents = 'none';
+    } else {
+      el.style.transform = `translateX(${offset>0?400:-400}px)`;
+      el.style.opacity = '0';
+      el.style.zIndex = 0;
+      el.style.pointerEvents = 'none';
+    }
+    if(!animate){ void el.offsetWidth; el.style.transition = ''; }
+  }
+
+  function updatePositions(){
+    Array.from(deck.children).forEach(el=>{
+      const i = parseInt(el.dataset.index,10);
+      positionCard(el, i-current, true);
+    });
+    renderDots();
+    counterTitle.textContent = `Coches · ${current+1}/${cars.length}`;
+  }
+
+  function goTo(i){
+    if(i<0) i=0;
+    if(i>cars.length-1) i=cars.length-1;
+    if(i===current) return;
+    current = i;
+    haptic('light');
+    updatePositions();
+  }
+
+  // ---------- drag / swipe ----------
+  function attachDrag(el){
+    let startX=0, startY=0, dx=0, dragging=false, decided=false, isHoriz=false;
+
+    function onDown(e){
+      const idx = parseInt(el.dataset.index,10);
+      if(idx !== current) return;
+      dragging = true; decided=false; isHoriz=false;
+      const p = e.touches ? e.touches[0] : e;
+      startX = p.clientX; startY = p.clientY; dx=0;
+      el.classList.add('dragging');
+    }
+    function onMove(e){
+      if(!dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      dx = p.clientX - startX;
+      const dy = p.clientY - startY;
+      if(!decided){
+        if(Math.abs(dx) > 6 || Math.abs(dy) > 6){
+          isHoriz = Math.abs(dx) > Math.abs(dy);
+          decided = true;
+        }
+      }
+      if(isHoriz){
+        if(e.cancelable) e.preventDefault();
+        el.style.transform = `translateX(${dx}px) rotate(${dx/20}deg)`;
+      }
+    }
+    function onUp(){
+      if(!dragging) return;
+      dragging = false;
+      el.classList.remove('dragging');
+      if(isHoriz && Math.abs(dx) > 70){
+        if(dx < 0 && current < cars.length-1) goTo(current+1);
+        else if(dx > 0 && current > 0) goTo(current-1);
+        else updatePositions();
+      } else {
+        updatePositions();
+      }
+    }
+    el.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    el.addEventListener('touchstart', onDown, {passive:true});
+    el.addEventListener('touchmove', onMove, {passive:false});
+    el.addEventListener('touchend', onUp);
+  }
+
+  // ---------- booking sheet ----------
+  const overlay = document.getElementById('overlay');
+  const bookingSheet = document.getElementById('bookingSheet');
+  const requestsSheet = document.getElementById('requestsSheet');
+  const stampOverlay = document.getElementById('stampOverlay');
+
+  function openSheet(sheet){
+    overlay.classList.add('show');
+    sheet.classList.add('show');
+  }
+  function closeSheets(){
+    overlay.classList.remove('show');
+    bookingSheet.classList.remove('show');
+    requestsSheet.classList.remove('show');
+  }
+  overlay.addEventListener('click', closeSheets);
+
+  function todayStr(){
+    const d = new Date();
+    return d.toISOString().slice(0,10);
+  }
+
+  document.getElementById('mainBookBtn').addEventListener('click', ()=>{
+    if(!cars.length) return;
+    activeBookingCar = cars[current];
+    document.getElementById('bookCarName').textContent = 'Reservar ' + activeBookingCar.name;
+    document.getElementById('bookCarSub').textContent = `€${activeBookingCar.priceperday}/día · ${activeBookingCar.cls}`;
+    const from = document.getElementById('dateFrom');
+    const to = document.getElementById('dateTo');
+    from.min = todayStr(); to.min = todayStr();
+    if(!from.value) from.value = todayStr();
+    document.getElementById('dateErr').classList.remove('show');
+    document.getElementById('formErr').classList.remove('show');
+    let prefillName = '';
+    try{ prefillName = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || ''; }catch(e){}
+    if(prefillName && !document.getElementById('nameInput').value){
+      document.getElementById('nameInput').value = prefillName;
+    }
+    haptic('medium');
+    openSheet(bookingSheet);
+  });
+
+  document.getElementById('confirmBtn').addEventListener('click', async ()=>{
+    const from = document.getElementById('dateFrom').value;
+    const to = document.getElementById('dateTo').value;
+    const name = document.getElementById('nameInput').value.trim();
+    const phone = document.getElementById('phoneInput').value.trim();
+    const note = document.getElementById('noteInput').value.trim();
+
+    const dateErr = document.getElementById('dateErr');
+    const formErr = document.getElementById('formErr');
+    dateErr.classList.remove('show');
+    formErr.classList.remove('show');
+    formErr.textContent = 'Rellena nombre y teléfono para continuar.';
+
+    if(!from || !to || new Date(to) <= new Date(from)){
+      dateErr.classList.add('show');
+      return;
+    }
+    if(!name || !phone){
+      formErr.classList.add('show');
+      return;
+    }
+
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    let tgUser = null, tgUserId = null;
+    try{
+      const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+      if(u){ tgUser = u.username || null; tgUserId = u.id || null; }
+    }catch(e){}
+
+    const booking = {
+      bookingId: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      carId: activeBookingCar.id,
+      carName: activeBookingCar.name,
+      priceperday: activeBookingCar.priceperday,
+      from, to, name, phone, note,
+      createdAt: new Date().toISOString(),
+      tgUser, tgUserId,
+      status: 'new',
+    };
+
+    try{
+      await saveBooking(booking);
+      notify('success');
+      closeSheets();
+      stampOverlay.classList.add('show');
+      setTimeout(()=>{ stampOverlay.classList.remove('show'); }, 1800);
+      document.getElementById('noteInput').value = '';
+    }catch(e){
+      notify('error');
+      formErr.textContent = 'No se pudo enviar la solicitud. Inténtalo de nuevo.';
+      formErr.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar solicitud';
+    }
+  });
+
+  // ---------- my requests sheet ----------
+  document.getElementById('reqBtn').addEventListener('click', ()=>{
+    haptic('light');
+    const list = document.getElementById('reqList');
+    openSheet(requestsSheet);
+    const bookings = loadMyBookings();
+    if(!bookings.length){
+      list.innerHTML = '<div class="req-empty">Todavía no has enviado solicitudes.<br>Elige un coche y reserva.</div>';
+      return;
+    }
+    list.innerHTML = bookings.map(b=>`
+      <div class="req-item">
+        <div class="top">
+          <div class="car">${esc(b.carName)}</div>
+          <div class="when">${new Date(b.createdAt).toLocaleDateString('es-ES',{day:'2-digit',month:'short'})}</div>
+        </div>
+        <div class="meta">
+          ${esc(b.from)} → ${esc(b.to)} · €${esc(b.priceperday)}/día<br>
+          ${esc(b.name)} · ${esc(b.phone)}
+          ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
+        </div>
+      </div>
+    `).join('');
+  });
+
+  document.getElementById('clearReq').addEventListener('click', ()=>{
+    if(!confirm('¿Borrar el historial local de solicitudes?')) return;
+    clearMyBookings();
+    document.getElementById('reqList').innerHTML = '<div class="req-empty">Todavía no has enviado solicitudes.<br>Elige un coche y reserva.</div>';
+  });
+
+  // ---------- keyboard nav for desktop testing ----------
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight') goTo(current+1);
+    if(e.key === 'ArrowLeft') goTo(current-1);
+  });
+
+  // ---------- init ----------
+  (async function init(){
+    await loadFleet();
+    renderDeck();
+  })();
+
+})();
+</script>
+</body>
+</html>
