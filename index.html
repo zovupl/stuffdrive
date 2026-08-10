@@ -3,475 +3,433 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pablo Auto Spain — Alquiler de coches en Barcelona</title>
+<title>Pablo Auto Spain — Rent a Car Barcelona</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="firebase-config.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root{
-  --ink:#0F2A3D;
-  --ink-soft:#5A7488;
-  --paper:#FBF6EC;
-  --paper-soft:#F1E9D8;
-  --gold:#E8A33D;
-  --terracotta:#D9542E;
-  --teal:#2F8F7B;
-  --line: rgba(15,42,61,0.14);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:#0A0A0C;
+  --bg-soft:#121216;
+  --card:#16161B;
+  --card-2:#1D1D24;
+  --line:rgba(255,255,255,0.08);
+  --line-2:rgba(255,255,255,0.14);
+  --text:#F5F3EE;
+  --text-dim:#9C9AA3;
+  --text-faint:#5F5D66;
+  --amber:#E8A33D;
+  --amber-soft:rgba(232,163,61,0.14);
+  --amber-line:rgba(232,163,61,0.35);
+  --green:#3DD68C;
+  --red:#F05D45;
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+  --r-lg:24px;
+  --r-md:16px;
+  --r-sm:12px;
 }
 
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;height:100%;overflow:hidden;}
 body{
-  font-family:'Manrope', sans-serif;
-  background:
-    radial-gradient(600px 400px at 50% -10%, #1A4A63, transparent),
-    radial-gradient(500px 380px at 80% 0%, rgba(232,163,61,0.18), transparent 60%),
-    var(--ink);
-  color:var(--paper);
-  display:flex;
-  justify-content:center;
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;justify-content:center;
+  overscroll-behavior:none;
 }
 
 #app{
-  width:100%;
-  max-width:430px;
-  height:100vh;
-  height:100dvh;
+  width:100%;max-width:430px;
+  height:100vh;height:100dvh;
   position:relative;
-  display:flex;
-  flex-direction:column;
+  display:flex;flex-direction:column;
   overflow:hidden;
+  background:
+    radial-gradient(420px 260px at 85% -8%, rgba(232,163,61,0.10), transparent 65%),
+    radial-gradient(600px 420px at 15% -12%, rgba(60,80,120,0.10), transparent 60%),
+    var(--bg);
 }
 
-/* ---------- HEADER ---------- */
+/* ============ HEADER ============ */
 .header{
-  padding:18px 20px 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  padding:14px 18px 10px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
   flex-shrink:0;
 }
-.brand{display:flex; flex-direction:column; gap:2px;}
+.brand{display:flex;flex-direction:column;gap:1px;min-width:0;}
 .brand .eyebrow{
-  font-family:'JetBrains Mono', monospace;
-  font-size:11px;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  color:var(--gold);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--amber);
+  white-space:nowrap;
 }
 .brand h1{
-  font-family:'Fraunces', serif;
-  font-weight:600;
-  font-size:22px;
-  margin:0;
-  color:var(--paper);
+  font-size:17px;font-weight:800;letter-spacing:0.01em;
+  margin:0;color:var(--text);white-space:nowrap;
 }
-.icon-btn{
-  width:40px;height:40px;border-radius:50%;
-  background:rgba(251,246,236,0.08);
-  border:1px solid rgba(251,246,236,0.18);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--paper);
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+.lang-switch{
+  display:flex;
+  background:var(--bg-soft);
+  border:1px solid var(--line);
+  border-radius:50px;
+  padding:3px;
+}
+.lang-btn{
+  border:none;background:transparent;
+  color:var(--text-faint);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;font-weight:600;letter-spacing:0.04em;
+  padding:6px 9px;border-radius:50px;
   cursor:pointer;
+  transition:all .2s;
 }
-.icon-btn:active{background:rgba(251,246,236,0.18);}
-
-.demo-badge{
-  position:absolute;
-  top:64px; left:50%;
-  transform:translateX(-50%);
-  z-index:15;
-  font-family:'JetBrains Mono', monospace;
-  font-size:10px;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:var(--ink);
-  background:var(--gold);
-  padding:4px 12px;
-  border-radius:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.3);
-  display:none;
+.lang-btn.active{
+  background:var(--amber);
+  color:#141414;
 }
-.demo-badge.show{display:block;}
 
-/* ---------- DECK ---------- */
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg-soft);
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim);cursor:pointer;
+  transition:all .2s;
+}
+.icon-btn:active{transform:scale(0.92);background:var(--card-2);}
+
+/* ============ DECK ============ */
 .deck-wrap{
-  flex:1;
-  position:relative;
-  padding:6px 18px 0;
+  flex:1;position:relative;
+  padding:4px 16px 0;
   min-height:0;
 }
-.deck{
-  position:relative;
-  width:100%;
-  height:100%;
-}
+.deck{position:relative;width:100%;height:100%;}
 .deck-loading{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  color:rgba(251,246,236,0.6);
-  font-family:'JetBrains Mono', monospace;
-  font-size:12px;
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;gap:14px;
+  align-items:center;justify-content:center;
+  color:var(--text-faint);
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.08em;
 }
+.spinner{
+  width:26px;height:26px;border-radius:50%;
+  border:2.5px solid var(--line-2);
+  border-top-color:var(--amber);
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
 .card{
-  position:absolute;
-  inset:0;
-  background:var(--paper);
-  border-radius:26px;
+  position:absolute;inset:0;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
   overflow:hidden;
-  box-shadow:0 20px 40px rgba(0,0,0,0.35), 0 2px 0 rgba(255,255,255,0.4) inset;
-  display:flex;
-  flex-direction:column;
+  display:flex;flex-direction:column;
   touch-action:pan-y;
   will-change:transform;
-  transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s;
+  transition:transform .38s cubic-bezier(.22,.9,.24,1), opacity .38s;
+  box-shadow:0 24px 60px rgba(0,0,0,0.55);
 }
 .card.dragging{transition:none;}
 
-.card-photo{
+/* ---- photo area ---- */
+.ph{
   position:relative;
-  height:52%;
-  flex-shrink:0;
-  background:
-    radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.5), transparent 60%),
-    var(--photo-bg, #E4D9BE);
-  display:flex;align-items:center;justify-content:center;
+  height:54%;flex-shrink:0;
+  background:#101014;
+  overflow:hidden;
+  user-select:none;
 }
-.card-photo svg{width:78%;height:78%;}
-.card-photo img{width:100%;height:100%;object-fit:cover;}
-
-.class-stamp{
-  position:absolute;
-  top:16px; right:16px;
-  padding:6px 12px;
-  border:1.5px dashed var(--ink);
-  border-radius:50px;
-  transform:rotate(6deg);
-  font-family:'JetBrains Mono', monospace;
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:var(--ink);
-  background:rgba(251,246,236,0.55);
-  backdrop-filter:blur(2px);
+.ph img{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .3s;
 }
+.ph img.on{opacity:1;}
+.ph .ph-shimmer{
+  position:absolute;inset:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,0.05) 50%,transparent 70%);
+  background-size:250% 100%;
+  animation:shim 1.4s infinite;
+}
+@keyframes shim{0%{background-position:120% 0}100%{background-position:-120% 0}}
 
-.card-photo .years{
-  position:absolute;
-  bottom:14px; left:16px;
-  font-family:'JetBrains Mono', monospace;
-  font-size:11px;
-  color:var(--ink-soft);
-  background:rgba(251,246,236,0.6);
-  padding:4px 9px;
-  border-radius:20px;
+.ph .scrim{
+  position:absolute;left:0;right:0;bottom:0;height:46%;
+  background:linear-gradient(to top, rgba(10,10,12,0.92), rgba(10,10,12,0.4) 55%, transparent);
+  pointer-events:none;
+}
+.ph .scrim-top{
+  position:absolute;left:0;right:0;top:0;height:56px;
+  background:linear-gradient(to bottom, rgba(10,10,12,0.55), transparent);
+  pointer-events:none;
 }
 
-/* perforation divider */
-.perf{
-  position:relative;
-  height:0;
-  border-top:2.5px dashed var(--line);
-  margin:0 0;
+/* story-style progress */
+.ph .segs{
+  position:absolute;top:10px;left:12px;right:12px;
+  display:flex;gap:4px;z-index:4;
 }
-.perf::before,.perf::after{
-  content:'';
-  position:absolute;
-  top:-13px;
-  width:26px;height:26px;
-  border-radius:50%;
-  background:var(--ink);
+.ph .seg{
+  flex:1;height:2.5px;border-radius:3px;
+  background:rgba(255,255,255,0.28);
+  overflow:hidden;
 }
-.perf::before{left:-31px;}
-.perf::after{right:-31px;}
+.ph .seg i{
+  display:block;height:100%;width:0%;
+  background:#fff;border-radius:3px;
+  transition:width .2s;
+}
+.ph .seg.done i{width:100%;}
+.ph .seg.now i{width:100%;background:var(--amber);}
 
-.card-details{
-  flex:1;
-  padding:20px 20px 16px;
+/* tap zones */
+.ph .tz{position:absolute;top:0;bottom:0;width:34%;z-index:3;}
+.ph .tz.l{left:0;}
+.ph .tz.r{right:0;}
+
+.chip-class{
+  position:absolute;top:22px;right:14px;z-index:4;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--amber);
+  background:rgba(10,10,12,0.55);
+  border:1px solid var(--amber-line);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:6px 11px;border-radius:50px;
+}
+
+.ph .title-block{
+  position:absolute;left:16px;right:16px;bottom:12px;z-index:4;
+  pointer-events:none;
+}
+.ph .title-block .nm{
+  font-size:24px;font-weight:800;letter-spacing:-0.01em;
+  color:#fff;line-height:1.15;
+  text-shadow:0 2px 14px rgba(0,0,0,0.5);
+}
+.ph .title-block .sub{
+  margin-top:3px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:rgba(255,255,255,0.75);
+  letter-spacing:0.05em;
+}
+
+/* ---- details ---- */
+.details{
+  flex:1;min-height:0;
   overflow-y:auto;
-  min-height:0;
+  padding:16px 16px 12px;
+  -webkit-overflow-scrolling:touch;
 }
-.card-details h2{
-  font-family:'Fraunces', serif;
-  font-size:26px;
-  font-weight:600;
-  margin:0 0 2px;
-  color:var(--ink);
+.spec-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:12px;
 }
-.card-details .subline{
-  font-size:13px;
-  color:var(--ink-soft);
-  margin-bottom:14px;
+.spec{
+  background:var(--card-2);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  padding:10px 10px 9px;
+  display:flex;flex-direction:column;gap:3px;
 }
+.spec .k{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-faint);
+}
+.spec .v{font-size:13px;font-weight:700;color:var(--text);}
 
-.spec-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin-bottom:14px;
+.feats{display:flex;flex-wrap:wrap;gap:6px;}
+.feat{
+  font-size:11.5px;font-weight:600;
+  color:var(--text-dim);
+  background:var(--bg-soft);
+  border:1px solid var(--line);
+  padding:5px 11px;border-radius:50px;
 }
-.spec-chip{
-  background:var(--paper-soft);
-  border-radius:12px;
-  padding:8px 10px;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-.spec-chip .k{
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  color:var(--ink-soft);
-  font-family:'JetBrains Mono', monospace;
-}
-.spec-chip .v{
-  font-size:13px;
-  font-weight:700;
-  color:var(--ink);
-}
-
-.features{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:16px;
-}
-.feature-tag{
-  font-size:11px;
-  color:var(--teal);
-  background:rgba(47,143,123,0.1);
-  border:1px solid rgba(47,143,123,0.3);
-  padding:4px 10px;
-  border-radius:20px;
-  font-weight:600;
-}
-
-.price-row{
-  display:flex;
-  align-items:baseline;
-  gap:6px;
-}
-.price-row .amount{
-  font-family:'Fraunces', serif;
-  font-size:28px;
-  font-weight:700;
-  color:var(--terracotta);
-}
-.price-row .unit{
-  font-size:12px;
-  color:var(--ink-soft);
-  font-family:'JetBrains Mono', monospace;
+.feat::before{
+  content:'';display:inline-block;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--amber);
+  margin-right:7px;vertical-align:1.5px;
 }
 
 /* dots */
 .dots{
-  display:flex;
-  justify-content:center;
-  gap:6px;
-  padding:10px 0 4px;
-  flex-shrink:0;
+  display:flex;justify-content:center;gap:5px;
+  padding:10px 0 2px;flex-shrink:0;
 }
 .dot{
-  width:6px;height:6px;border-radius:50%;
-  background:rgba(251,246,236,0.25);
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,0.18);
   transition:all .25s;
 }
-.dot.active{
-  width:20px;
-  border-radius:4px;
-  background:var(--gold);
+.dot.active{width:18px;border-radius:3px;background:var(--amber);}
+
+/* ============ CTA BAR ============ */
+.cta-bar{
+  padding:10px 16px calc(14px + var(--safe-bottom));
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;
+}
+.price-box{display:flex;flex-direction:column;flex-shrink:0;}
+.price-box .p{
+  font-size:22px;font-weight:800;color:var(--text);
+  letter-spacing:-0.01em;line-height:1.05;
+}
+.price-box .p span{color:var(--amber);}
+.price-box .u{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text-faint);
+}
+.book-btn{
+  flex:1;border:none;
+  border-radius:var(--r-md);
+  background:linear-gradient(135deg,#F0B254,#DD8F2A);
+  color:#161005;
+  font-family:'Manrope',sans-serif;
+  font-weight:800;font-size:15px;letter-spacing:0.01em;
+  padding:15px 10px;
+  cursor:pointer;
+  box-shadow:0 8px 26px rgba(232,163,61,0.28);
+  transition:transform .15s;
+}
+.book-btn:active{transform:scale(0.97);}
+
+/* ============ SHEETS ============ */
+.overlay{
+  position:absolute;inset:0;
+  background:rgba(5,5,7,0.66);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;z-index:20;
+}
+.overlay.show{opacity:1;pointer-events:auto;}
+
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;
+  background:var(--bg-soft);
+  border-top:1px solid var(--line-2);
+  border-radius:26px 26px 0 0;
+  padding:8px 20px calc(20px + var(--safe-bottom));
+  transform:translateY(102%);
+  transition:transform .34s cubic-bezier(.22,.9,.24,1);
+  z-index:21;max-height:90%;
+  overflow-y:auto;
+  color:var(--text);
+}
+.sheet.show{transform:translateY(0);}
+.sheet-handle{
+  width:36px;height:4px;border-radius:4px;
+  background:var(--line-2);
+  margin:8px auto 16px;
+}
+.sheet h3{font-size:19px;font-weight:800;margin:0 0 4px;}
+.sheet .sub{font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.45;}
+
+.field{margin-bottom:13px;}
+.field label{
+  display:block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:6px;
+}
+.field input,.field textarea{
+  width:100%;
+  border:1.5px solid var(--line-2);
+  border-radius:var(--r-sm);
+  padding:13px 14px;
+  font-family:'Manrope',sans-serif;font-size:15px;
+  color:var(--text);
+  background:var(--card);
+  outline:none;
+  transition:border-color .2s;
+  color-scheme:dark;
+}
+.field input:focus,.field textarea:focus{border-color:var(--amber);}
+.date-row{display:flex;gap:10px;}
+.date-row .field{flex:1;}
+
+.err{
+  color:var(--red);font-size:12px;
+  margin:-6px 0 10px;display:none;
+}
+.err.show{display:block;}
+
+.confirm-btn{
+  width:100%;border:none;
+  border-radius:var(--r-md);
+  background:linear-gradient(135deg,#F0B254,#DD8F2A);
+  color:#161005;
+  font-weight:800;font-size:15px;
+  padding:15px;cursor:pointer;margin-top:2px;
+  transition:transform .15s, opacity .2s;
+}
+.confirm-btn:active{transform:scale(0.98);}
+.confirm-btn:disabled{opacity:0.55;}
+
+/* requests */
+.req-item{
+  border:1px solid var(--line);
+  background:var(--card);
+  border-radius:var(--r-md);
+  padding:13px 14px;margin-bottom:10px;
+}
+.req-item .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.req-item .car{font-weight:800;font-size:14px;}
+.req-item .when{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-faint);}
+.req-item .meta{font-size:12.5px;color:var(--text-dim);line-height:1.55;}
+.req-empty{text-align:center;padding:34px 10px;color:var(--text-faint);font-size:13px;line-height:1.5;}
+.clear-link{
+  display:block;text-align:center;
+  font-size:12px;color:var(--text-faint);
+  margin-top:14px;text-decoration:underline;cursor:pointer;
+}
+
+/* success overlay */
+#stampOverlay{
+  position:absolute;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,7,0.8);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+#stampOverlay.show{opacity:1;}
+.stamp{
+  text-align:center;
+  transform:scale(0.7);
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+}
+#stampOverlay.show .stamp{transform:scale(1);}
+.stamp .ring{
+  width:78px;height:78px;border-radius:50%;
+  border:2.5px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  box-shadow:0 0 40px rgba(61,214,140,0.25);
+}
+.stamp .t1{font-size:21px;font-weight:800;color:var(--text);}
+.stamp .t2{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--text-dim);
+  margin-top:6px;letter-spacing:0.06em;
 }
 
 .swipe-hint{
   text-align:center;
-  font-size:11px;
-  color:rgba(251,246,236,0.45);
-  font-family:'JetBrains Mono', monospace;
-  padding-bottom:2px;
-  flex-shrink:0;
-}
-
-/* ---------- CTA BAR ---------- */
-.cta-bar{
-  padding:10px 18px calc(16px + var(--safe-bottom));
-  flex-shrink:0;
-}
-.book-btn{
-  width:100%;
-  border:none;
-  border-radius:18px;
-  background:var(--terracotta);
-  color:#fff;
-  font-family:'Manrope', sans-serif;
-  font-weight:800;
-  font-size:16px;
-  padding:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  cursor:pointer;
-  box-shadow:0 10px 24px rgba(217,84,46,0.4);
-}
-.book-btn:active{transform:scale(0.98);}
-
-/* ---------- SHEETS ---------- */
-.overlay{
-  position:absolute; inset:0;
-  background:rgba(15,42,61,0.55);
-  opacity:0; pointer-events:none;
-  transition:opacity .25s;
-  z-index:20;
-}
-.overlay.show{opacity:1; pointer-events:auto;}
-
-.sheet{
-  position:absolute;
-  left:0; right:0; bottom:0;
-  background:var(--paper);
-  border-radius:26px 26px 0 0;
-  padding:10px 22px calc(22px + var(--safe-bottom));
-  transform:translateY(100%);
-  transition:transform .32s cubic-bezier(.2,.8,.2,1);
-  z-index:21;
-  max-height:88%;
-  overflow-y:auto;
-  color:var(--ink);
-}
-.sheet.show{transform:translateY(0);}
-.sheet-handle{
-  width:38px;height:4px;border-radius:4px;
-  background:var(--line);
-  margin:6px auto 14px;
-}
-.sheet h3{
-  font-family:'Fraunces', serif;
-  font-size:20px;
-  margin:0 0 4px;
-}
-.sheet .sheet-sub{
-  font-size:13px;
-  color:var(--ink-soft);
-  margin-bottom:16px;
-}
-
-.field{margin-bottom:14px;}
-.field label{
-  display:block;
-  font-size:11px;
-  font-family:'JetBrains Mono', monospace;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  color:var(--ink-soft);
-  margin-bottom:6px;
-}
-.field input, .field textarea{
-  width:100%;
-  border:1.5px solid var(--line);
-  border-radius:12px;
-  padding:12px 13px;
-  font-family:'Manrope', sans-serif;
-  font-size:15px;
-  color:var(--ink);
-  background:var(--paper-soft);
-}
-.field input:focus, .field textarea:focus{
-  outline:none;
-  border-color:var(--teal);
-}
-.date-row{display:flex; gap:10px;}
-.date-row .field{flex:1;}
-
-.confirm-btn{
-  width:100%;
-  border:none;
-  border-radius:16px;
-  background:var(--teal);
-  color:#fff;
-  font-weight:800;
-  font-size:15px;
-  padding:15px;
-  cursor:pointer;
-  margin-top:4px;
-}
-.confirm-btn:active{transform:scale(0.98);}
-.confirm-btn:disabled{opacity:0.5;}
-
-.err{
-  color:var(--terracotta);
-  font-size:12px;
-  margin:-8px 0 10px;
-  display:none;
-}
-.err.show{display:block;}
-
-/* requests list */
-.req-item{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:12px 14px;
-  margin-bottom:10px;
-}
-.req-item .top{
-  display:flex; justify-content:space-between; align-items:baseline;
-  margin-bottom:4px;
-}
-.req-item .car{font-weight:800; font-size:14px;}
-.req-item .when{font-size:11px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace;}
-.req-item .meta{font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
-.req-empty{
-  text-align:center;
-  padding:30px 10px;
-  color:var(--ink-soft);
-  font-size:13px;
-}
-.clear-link{
-  display:block;
-  text-align:center;
-  font-size:12px;
-  color:var(--ink-soft);
-  margin-top:14px;
-  text-decoration:underline;
-  cursor:pointer;
-}
-
-/* stamp overlay */
-#stampOverlay{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(15,42,61,0.7);
-  opacity:0; pointer-events:none;
-  transition:opacity .25s;
-  z-index:30;
-}
-#stampOverlay.show{opacity:1;}
-.stamp{
-  border:4px double var(--teal);
-  border-radius:16px;
-  padding:18px 34px;
-  transform:rotate(-8deg) scale(0.7);
-  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
-  text-align:center;
-}
-#stampOverlay.show .stamp{transform:rotate(-8deg) scale(1);}
-.stamp .t1{
-  font-family:'Fraunces', serif;
-  font-weight:700;
-  font-size:24px;
-  color:var(--teal);
-  letter-spacing:0.03em;
-}
-.stamp .t2{
-  font-family:'JetBrains Mono', monospace;
-  font-size:11px;
-  color:var(--teal);
-  margin-top:4px;
-  text-transform:uppercase;
-  letter-spacing:0.1em;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.08em;
+  color:var(--text-faint);
+  padding:4px 0 2px;flex-shrink:0;
 }
 
 ::-webkit-scrollbar{width:0;height:0;}
@@ -483,19 +441,24 @@ body{
 
   <div class="header">
     <div class="brand">
-      <span class="eyebrow">Barcelona · Alquiler</span>
-      <h1 id="counterTitle">Coches</h1>
+      <span class="eyebrow">Barcelona</span>
+      <h1>PABLO AUTO SPAIN</h1>
     </div>
-    <div class="icon-btn" id="reqBtn" title="Mis solicitudes">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2" rx="3"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <div class="header-right">
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+      </div>
+      <div class="icon-btn" id="reqBtn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/></svg>
+      </div>
     </div>
   </div>
 
-  <div class="demo-badge" id="demoBadge">Modo demo</div>
-
   <div class="deck-wrap">
     <div class="deck" id="deck">
-      <div class="deck-loading">Cargando coches…</div>
+      <div class="deck-loading"><div class="spinner"></div><span id="loadingText">…</span></div>
     </div>
 
     <div class="overlay" id="overlay"></div>
@@ -503,62 +466,64 @@ body{
     <!-- booking sheet -->
     <div class="sheet" id="bookingSheet">
       <div class="sheet-handle"></div>
-      <h3 id="bookCarName">Reservar coche</h3>
-      <div class="sheet-sub" id="bookCarSub">Completa los datos y te contactaremos para confirmar.</div>
-
+      <h3 id="bookCarName"></h3>
+      <div class="sub" id="bookCarSub"></div>
       <div class="date-row">
         <div class="field">
-          <label>Recogida</label>
+          <label id="lblFrom"></label>
           <input type="date" id="dateFrom">
         </div>
         <div class="field">
-          <label>Devolución</label>
+          <label id="lblTo"></label>
           <input type="date" id="dateTo">
         </div>
       </div>
-      <div class="err" id="dateErr">La fecha de devolución debe ser posterior a la de recogida.</div>
-
+      <div class="err" id="dateErr"></div>
       <div class="field">
-        <label>Nombre</label>
-        <input type="text" id="nameInput" placeholder="Tu nombre">
+        <label id="lblName"></label>
+        <input type="text" id="nameInput">
       </div>
       <div class="field">
-        <label>Teléfono / Telegram</label>
-        <input type="tel" id="phoneInput" placeholder="+34 ...">
+        <label id="lblPhone"></label>
+        <input type="tel" id="phoneInput" placeholder="+34 …">
       </div>
       <div class="field">
-        <label>Comentario (opcional)</label>
-        <textarea id="noteInput" rows="2" placeholder="Hora de recogida, aeropuerto, etc."></textarea>
+        <label id="lblNote"></label>
+        <textarea id="noteInput" rows="2"></textarea>
       </div>
-      <div class="err" id="formErr">Rellena nombre y teléfono para continuar.</div>
-
-      <button class="confirm-btn" id="confirmBtn">Confirmar solicitud</button>
+      <div class="err" id="formErr"></div>
+      <button class="confirm-btn" id="confirmBtn"></button>
     </div>
 
     <!-- my requests sheet -->
     <div class="sheet" id="requestsSheet">
       <div class="sheet-handle"></div>
-      <h3>Mis solicitudes</h3>
-      <div class="sheet-sub">Solicitudes enviadas desde este dispositivo.</div>
+      <h3 id="reqTitle"></h3>
+      <div class="sub" id="reqSub"></div>
       <div id="reqList"></div>
-      <div class="clear-link" id="clearReq">Borrar historial local</div>
+      <div class="clear-link" id="clearReq"></div>
     </div>
 
     <div id="stampOverlay">
       <div class="stamp">
-        <div class="t1">Reservado</div>
-        <div class="t2">Te contactaremos pronto</div>
+        <div class="ring">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#3DD68C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="t1" id="stampT1"></div>
+        <div class="t2" id="stampT2"></div>
       </div>
     </div>
   </div>
 
   <div class="dots" id="dots"></div>
-  <div class="swipe-hint">← desliza para ver más coches →</div>
+  <div class="swipe-hint" id="swipeHint"></div>
 
   <div class="cta-bar">
-    <button class="book-btn" id="mainBookBtn">
-      Reservar este coche
-    </button>
+    <div class="price-box">
+      <div class="p" id="ctaPrice"></div>
+      <div class="u" id="ctaUnit"></div>
+    </div>
+    <button class="book-btn" id="mainBookBtn"></button>
   </div>
 
 </div>
@@ -567,373 +532,392 @@ body{
 (function(){
   "use strict";
 
+  // ================= Telegram =================
   const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
   if (tg) {
     try{
-      tg.ready();
-      tg.expand();
-      tg.setHeaderColor && tg.setHeaderColor('#0F2A3D');
-      tg.setBackgroundColor && tg.setBackgroundColor('#0F2A3D');
+      tg.ready(); tg.expand();
+      tg.setHeaderColor && tg.setHeaderColor('#0A0A0C');
+      tg.setBackgroundColor && tg.setBackgroundColor('#0A0A0C');
     }catch(e){}
   }
-  function haptic(kind){
-    try{ tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(kind||'light'); }catch(e){}
-  }
-  function notify(kind){
-    try{ tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(kind); }catch(e){}
-  }
+  const haptic = k => { try{ tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(k||'light'); }catch(e){} };
+  const notifyH = k => { try{ tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(k); }catch(e){} };
 
-  // ---------- demo fleet (fallback cuando no hay Firebase) ----------
-  const DEMO_CARS = [
-    {id:'c1', name:'Fiat 500 Cabrio', cls:'Compacto', shape:'low', color:'#E9D6C0', priceperday:39, year:'2022', seats:4, doors:3, trans:'Manual', fuel:'Gasolina', consumo:'5.2 L', features:['A/C','Bluetooth','Descapotable']},
-    {id:'c2', name:'VW T-Roc', cls:'SUV', shape:'tall', color:'#D8E1DE', priceperday:59, year:'2023', seats:5, doors:5, trans:'Automático', fuel:'Diésel', consumo:'5.6 L', features:['A/C','CarPlay','Techo panorámico']},
-    {id:'c3', name:'Mini Cooper S', cls:'Compacto', shape:'mid', color:'#E3C9C1', priceperday:49, year:'2021', seats:4, doors:3, trans:'Manual', fuel:'Gasolina', consumo:'6.0 L', features:['A/C','Bluetooth']},
-    {id:'c4', name:'Mercedes Clase C', cls:'Premium', shape:'mid', color:'#D9D9D9', priceperday:89, year:'2023', seats:5, doors:4, trans:'Automático', fuel:'Híbrido', consumo:'4.8 L', features:['Cuero','CarPlay','Asist. carril']},
-    {id:'c5', name:'Fiat Panda', cls:'Económico', shape:'mid', color:'#EFE3C8', priceperday:29, year:'2020', seats:5, doors:5, trans:'Manual', fuel:'Gasolina', consumo:'5.4 L', features:['A/C','Radio USB']},
-    {id:'c6', name:'BMW X1', cls:'SUV', shape:'tall', color:'#CFE0DD', priceperday:75, year:'2022', seats:5, doors:5, trans:'Automático', fuel:'Diésel', consumo:'5.9 L', features:['A/C','CarPlay','Sensores']},
-    {id:'c7', name:'Renault Clio', cls:'Económico', shape:'mid', color:'#E4D2DA', priceperday:32, year:'2021', seats:5, doors:5, trans:'Manual', fuel:'Gasolina', consumo:'5.3 L', features:['A/C','Bluetooth']},
-    {id:'c8', name:'Tesla Model 3', cls:'Eléctrico', shape:'low', color:'#D6D9E0', priceperday:95, year:'2023', seats:5, doors:4, trans:'Automático', fuel:'Eléctrico', consumo:'0 L', features:['Autopilot','Carga rápida','CarPlay']},
-  ];
+  // ================= i18n =================
+  const I18N = {
+    es: {
+      loading:'CARGANDO COCHES', swipe:'← desliza para ver más →',
+      perDay:'por día', book:'Reservar',
+      bookTitle:c=>'Reservar '+c, bookSub:(p)=>'€'+p+'/día · Te contactaremos para confirmar.',
+      from:'Recogida', to:'Devolución', name:'Nombre', phone:'Teléfono / Telegram', note:'Comentario (opcional)',
+      notePh:'Hora de recogida, aeropuerto…', confirm:'Confirmar solicitud', sending:'Enviando…',
+      dateErr:'La fecha de devolución debe ser posterior a la de recogida.',
+      formErr:'Rellena nombre y teléfono para continuar.',
+      sendErr:'No se pudo enviar. Inténtalo de nuevo.',
+      ok1:'¡Reservado!', ok2:'Te contactaremos pronto',
+      reqTitle:'Mis solicitudes', reqSub:'Solicitudes enviadas desde este dispositivo.',
+      reqEmpty:'Todavía no has enviado solicitudes.<br>Elige un coche y reserva.',
+      clear:'Borrar historial local', clearAsk:'¿Borrar el historial local?',
+      specs:{year:'Año',seats:'Plazas',doors:'Puertas',trans:'Cambio',fuel:'Combustible',consumo:'Consumo'},
+      vals:{auto:'Automático',manual:'Manual',petrol:'Gasolina',diesel:'Diésel',hybrid:'Híbrido',electric:'Eléctrico'},
+      cls:{estate:'Familiar',muscle:'Deportivo',suv:'SUV',compact:'Compacto',premium:'Premium',economy:'Económico',electric:'Eléctrico',convertible:'Cabrio'},
+      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Cuero',panorama:'Techo panorámico',camera:'Cámara trasera',sensors:'Sensores',cruise:'Control crucero',heated:'Asientos calef.',keyless:'Keyless',led:'Faros LED',awd:'4×4','7seats':'7 plazas',navi:'Navegador',usb:'USB',convertible:'Descapotable',sport:'Modo Sport'}
+    },
+    en: {
+      loading:'LOADING CARS', swipe:'← swipe to see more →',
+      perDay:'per day', book:'Book now',
+      bookTitle:c=>'Book '+c, bookSub:(p)=>'€'+p+'/day · We will contact you to confirm.',
+      from:'Pick-up', to:'Return', name:'Name', phone:'Phone / Telegram', note:'Comment (optional)',
+      notePh:'Pick-up time, airport…', confirm:'Send request', sending:'Sending…',
+      dateErr:'Return date must be after pick-up date.',
+      formErr:'Fill in name and phone to continue.',
+      sendErr:'Could not send. Please try again.',
+      ok1:'Booked!', ok2:'We will contact you soon',
+      reqTitle:'My requests', reqSub:'Requests sent from this device.',
+      reqEmpty:'No requests yet.<br>Pick a car and book it.',
+      clear:'Clear local history', clearAsk:'Clear local history?',
+      specs:{year:'Year',seats:'Seats',doors:'Doors',trans:'Gearbox',fuel:'Fuel',consumo:'Consumption'},
+      vals:{auto:'Automatic',manual:'Manual',petrol:'Petrol',diesel:'Diesel',hybrid:'Hybrid',electric:'Electric'},
+      cls:{estate:'Estate',muscle:'Muscle car',suv:'SUV',compact:'Compact',premium:'Premium',economy:'Economy',electric:'Electric',convertible:'Convertible'},
+      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Leather',panorama:'Panoramic roof',camera:'Rear camera',sensors:'Parking sensors',cruise:'Cruise control',heated:'Heated seats',keyless:'Keyless',led:'LED lights',awd:'AWD','7seats':'7 seats',navi:'Navigation',usb:'USB',convertible:'Convertible',sport:'Sport mode'}
+    },
+    ru: {
+      loading:'ЗАГРУЖАЕМ МАШИНЫ', swipe:'← листай, чтобы увидеть больше →',
+      perDay:'в день', book:'Забронировать',
+      bookTitle:c=>'Бронь: '+c, bookSub:(p)=>'€'+p+'/день · Мы свяжемся с вами для подтверждения.',
+      from:'Получение', to:'Возврат', name:'Имя', phone:'Телефон / Telegram', note:'Комментарий (необязательно)',
+      notePh:'Время получения, аэропорт…', confirm:'Отправить заявку', sending:'Отправляем…',
+      dateErr:'Дата возврата должна быть позже даты получения.',
+      formErr:'Укажите имя и телефон, чтобы продолжить.',
+      sendErr:'Не удалось отправить. Попробуйте ещё раз.',
+      ok1:'Забронировано!', ok2:'Мы скоро свяжемся с вами',
+      reqTitle:'Мои заявки', reqSub:'Заявки, отправленные с этого устройства.',
+      reqEmpty:'Заявок пока нет.<br>Выберите машину и забронируйте.',
+      clear:'Очистить локальную историю', clearAsk:'Очистить локальную историю?',
+      specs:{year:'Год',seats:'Мест',doors:'Дверей',trans:'Коробка',fuel:'Топливо',consumo:'Расход'},
+      vals:{auto:'Автомат',manual:'Механика',petrol:'Бензин',diesel:'Дизель',hybrid:'Гибрид',electric:'Электро'},
+      cls:{estate:'Универсал',muscle:'Спорткар',suv:'Внедорожник',compact:'Компакт',premium:'Премиум',economy:'Эконом',electric:'Электро',convertible:'Кабриолет'},
+      feats:{ac:'Кондиционер',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Кожа',panorama:'Панорамная крыша',camera:'Камера заднего вида',sensors:'Парктроники',cruise:'Круиз-контроль',heated:'Подогрев сидений',keyless:'Keyless',led:'LED-фары',awd:'Полный привод','7seats':'7 мест',navi:'Навигация',usb:'USB',convertible:'Кабриолет',sport:'Спорт-режим'}
+    }
+  };
 
+  const LANG_KEY = 'pas:lang';
+  function detectLang(){
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved && I18N[saved]) return saved;
+    let code = '';
+    try{ code = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navigator.language || ''; }catch(e){}
+    code = String(code).slice(0,2).toLowerCase();
+    if (code === 'ru' || code === 'uk' || code === 'be' || code === 'kk') return 'ru';
+    if (code === 'es' || code === 'ca') return 'es';
+    return 'en';
+  }
+  let lang = detectLang();
+  const T = () => I18N[lang];
+  const trVal  = v => (T().vals[v]  || v);
+  const trCls  = v => (T().cls[v]   || v);
+  const trFeat = v => (T().feats[v] || v);
+
+  // ================= data =================
   const FB = window.FIREBASE_CONFIG || null;
   const MY_BOOKINGS_KEY = 'pas:my-bookings';
+
+  const DEMO_CARS = [
+    {id:'d1', name:'Audi A4 Avant', cls:'estate', priceperday:55, year:'2019', seats:5, doors:5, trans:'auto', fuel:'petrol', features:['ac','carplay','sensors'], photos:[]},
+    {id:'d2', name:'Mini Cooper', cls:'compact', priceperday:45, year:'2018', seats:4, doors:3, trans:'auto', fuel:'petrol', features:['ac','bluetooth'], photos:[]},
+  ];
 
   let cars = [];
   let current = 0;
   let activeBookingCar = null;
+  const photoIdx = {};   // carId -> current photo index
 
-  // ---------- Firestore REST helpers ----------
   function fireBase(){
     return 'https://firestore.googleapis.com/v1/projects/' + FB.projectId + '/databases/(default)/documents';
   }
   function fromFv(v){
-    if(v == null) return null;
-    if('stringValue' in v) return v.stringValue;
-    if('integerValue' in v) return parseInt(v.integerValue,10);
-    if('doubleValue' in v) return v.doubleValue;
-    if('booleanValue' in v) return v.booleanValue;
-    if('arrayValue' in v) return (v.arrayValue.values||[]).map(fromFv);
-    if('mapValue' in v){ const o={}; const f=v.mapValue.fields||{}; for(const k in f) o[k]=fromFv(f[k]); return o; }
+    if (v == null) return null;
+    if ('stringValue' in v) return v.stringValue;
+    if ('integerValue' in v) return parseInt(v.integerValue,10);
+    if ('doubleValue' in v) return v.doubleValue;
+    if ('booleanValue' in v) return v.booleanValue;
+    if ('arrayValue' in v) return (v.arrayValue.values||[]).map(fromFv);
+    if ('mapValue' in v){ const o={}; const f=v.mapValue.fields||{}; for(const k in f) o[k]=fromFv(f[k]); return o; }
     return null;
   }
   function toFv(x){
-    if(x === null || x === undefined) return {nullValue:null};
-    if(typeof x === 'string') return {stringValue:x};
-    if(typeof x === 'number') return Number.isInteger(x) ? {integerValue:String(x)} : {doubleValue:x};
-    if(typeof x === 'boolean') return {booleanValue:x};
-    if(Array.isArray(x)) return {arrayValue:{values:x.map(toFv)}};
-    if(typeof x === 'object'){ const f={}; for(const k in x) f[k]=toFv(x[k]); return {mapValue:{fields:f}}; }
+    if (x === null || x === undefined) return {nullValue:null};
+    if (typeof x === 'string') return {stringValue:x};
+    if (typeof x === 'number') return Number.isInteger(x) ? {integerValue:String(x)} : {doubleValue:x};
+    if (typeof x === 'boolean') return {booleanValue:x};
+    if (Array.isArray(x)) return {arrayValue:{values:x.map(toFv)}};
+    if (typeof x === 'object'){ const f={}; for(const k in x) f[k]=toFv(x[k]); return {mapValue:{fields:f}}; }
     return {nullValue:null};
   }
   function docToObj(doc){
-    const o = {};
-    const f = doc.fields || {};
-    for(const k in f) o[k] = fromFv(f[k]);
+    const o = {}; const f = doc.fields || {};
+    for (const k in f) o[k] = fromFv(f[k]);
     o.id = doc.name.split('/').pop();
     return o;
   }
 
-  // ---------- data layer ----------
   async function loadFleet(){
-    if(FB){
+    if (FB){
       try{
         const res = await fetch(fireBase() + '/cars?pageSize=300&key=' + FB.apiKey);
         const data = await res.json();
-        if(data.documents && data.documents.length){
-          cars = data.documents.map(docToObj)
+        if (data.documents && data.documents.length){
+          const list = data.documents.map(docToObj)
             .filter(c => c.active !== false)
-            .sort((a,b) => (a.order||999) - (b.order||999) || String(a.name).localeCompare(String(b.name)));
-          return;
+            .sort((a,b) => (a.order||999)-(b.order||999) || String(a.name).localeCompare(String(b.name)));
+          if (list.length){ cars = list; return; }
         }
-      }catch(e){ /* cae al demo */ }
-    }
-    cars = DEMO_CARS;
-    document.getElementById('demoBadge').classList.add('show');
-  }
-
-  async function saveBooking(booking){
-    // 1) siempre en el historial local del dispositivo
-    try{
-      const mine = JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]');
-      mine.unshift(booking);
-      localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(mine.slice(0,50)));
-    }catch(e){}
-
-    // 2) a Firestore, si está configurado
-    if(FB){
-      const fields = {};
-      for(const k in booking) fields[k] = toFv(booking[k]);
-      const res = await fetch(fireBase() + '/bookings?key=' + FB.apiKey, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({fields})
-      });
-      if(!res.ok) throw new Error('firestore ' + res.status);
-    }
-
-    // 3) aviso al grupo (webhook), si está configurado — fire and forget
-    if(window.NOTIFY_WEBHOOK){
-      try{
-        fetch(window.NOTIFY_WEBHOOK, {
-          method:'POST',
-          body: JSON.stringify({type:'booking', booking})
-        }).catch(function(){});
       }catch(e){}
     }
+    cars = DEMO_CARS;
   }
 
-  function loadMyBookings(){
-    try{ return JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]'); }
-    catch(e){ return []; }
-  }
-  function clearMyBookings(){
-    try{ localStorage.removeItem(MY_BOOKINGS_KEY); }catch(e){}
+  async function saveBooking(b){
+    try{
+      const mine = JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]');
+      mine.unshift(b);
+      localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(mine.slice(0,50)));
+    }catch(e){}
+    if (FB){
+      const fields = {}; for (const k in b) fields[k] = toFv(b[k]);
+      const res = await fetch(fireBase() + '/bookings?key=' + FB.apiKey, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({fields})
+      });
+      if (!res.ok) throw new Error('firestore ' + res.status);
+    }
+    if (window.NOTIFY_WEBHOOK){
+      try{ fetch(window.NOTIFY_WEBHOOK, {method:'POST', body: JSON.stringify({type:'booking', booking:b})}).catch(()=>{}); }catch(e){}
+    }
   }
 
-  // ---------- car illustration ----------
-  const SHAPES = {
-    low:  "M18,118 L18,96 Q18,86 34,80 L64,58 Q80,48 104,48 L214,48 Q236,48 252,62 L276,84 Q292,90 292,100 L292,118 Z",
-    mid:  "M18,118 L18,94 Q18,82 36,78 L66,58 Q84,40 112,40 L192,40 Q218,40 236,58 L262,78 Q292,82 292,96 L292,118 Z",
-    tall: "M14,118 L14,88 Q14,72 32,68 L58,52 Q78,32 108,32 L196,32 Q222,32 240,50 L266,68 Q298,72 298,90 L298,118 Z"
-  };
-  function carSVG(car){
-    const path = SHAPES[car.shape] || SHAPES.mid;
-    const color = car.color || '#E4D9BE';
+  const loadMy = () => { try{ return JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY)||'[]'); }catch(e){ return []; } };
+  const clearMy = () => { try{ localStorage.removeItem(MY_BOOKINGS_KEY); }catch(e){} };
+
+  // ================= helpers =================
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // ================= render =================
+  const deck = $('deck'), dotsEl = $('dots');
+
+  function photosOf(car){
+    if (Array.isArray(car.photos) && car.photos.length) return car.photos;
+    if (car.photo) return [car.photo];
+    return [];
+  }
+
+  function specsHTML(car){
+    const S = T().specs;
+    const rows = [
+      [S.year, car.year],
+      [S.seats, car.seats],
+      [S.doors, car.doors],
+      [S.trans, car.trans ? trVal(car.trans) : null],
+      [S.fuel, car.fuel ? trVal(car.fuel) : null],
+      [S.consumo, car.consumo],
+    ].filter(([,v]) => v !== undefined && v !== null && v !== '');
+    return rows.map(([k,v])=>`<div class="spec"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+  }
+
+  function segsHTML(car){
+    const ph = photosOf(car);
+    if (ph.length < 2) return '';
+    const i = photoIdx[car.id] || 0;
+    return `<div class="segs">${ph.map((_,j)=>`<div class="seg ${j<i?'done':''} ${j===i?'now':''}"><i></i></div>`).join('')}</div>`;
+  }
+
+  function photoAreaHTML(car){
+    const ph = photosOf(car);
+    const i = photoIdx[car.id] || 0;
+    const imgs = ph.map((src,j)=>`<img src="${esc(src)}" class="${j===i?'on':''}" ${j<=i+1?'':'loading="lazy"'} alt="">`).join('');
     return `
-    <svg viewBox="0 0 310 160" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="155" cy="128" rx="128" ry="10" fill="rgba(15,42,61,0.08)"/>
-      <path d="${path}" fill="${color}" stroke="#0F2A3D" stroke-width="3" stroke-linejoin="round"/>
-      <rect x="70" y="70" width="170" height="2" fill="rgba(15,42,61,0.15)"/>
-      <circle cx="82" cy="120" r="24" fill="#0F2A3D"/>
-      <circle cx="82" cy="120" r="10" fill="${color}"/>
-      <circle cx="228" cy="120" r="24" fill="#0F2A3D"/>
-      <circle cx="228" cy="120" r="10" fill="${color}"/>
-    </svg>`;
+      ${ph.length ? imgs : '<div class="ph-shimmer"></div>'}
+      <div class="scrim"></div><div class="scrim-top"></div>
+      ${segsHTML(car)}
+      ${ph.length>1 ? '<div class="tz l" data-go="-1"></div><div class="tz r" data-go="1"></div>' : ''}
+      <div class="chip-class">${esc(trCls(car.cls))}</div>
+      <div class="title-block">
+        <div class="nm">${esc(car.name)}</div>
+        <div class="sub">${esc(car.year||'')}${car.year?' · ':''}Barcelona</div>
+      </div>`;
   }
 
-  // ---------- rendering ----------
-  const deck = document.getElementById('deck');
-  const dotsEl = document.getElementById('dots');
-  const counterTitle = document.getElementById('counterTitle');
+  function cardHTML(car){
+    return `
+      <div class="ph" data-car="${esc(car.id)}">${photoAreaHTML(car)}</div>
+      <div class="details">
+        <div class="spec-row">${specsHTML(car)}</div>
+        <div class="feats">${(car.features||[]).map(f=>`<div class="feat">${esc(trFeat(f))}</div>`).join('')}</div>
+      </div>`;
+  }
 
-  function esc(s){
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function renderDeck(){
+    deck.innerHTML = '';
+    cars.forEach((car,i)=>{
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.dataset.index = i;
+      el.innerHTML = cardHTML(car);
+      positionCard(el, i-current, false);
+      deck.appendChild(el);
+      attachDrag(el);
+      attachPhotoNav(el, car);
+    });
+    renderDots();
+    updateCta();
   }
 
   function renderDots(){
     dotsEl.innerHTML = cars.map((_,i)=>`<div class="dot ${i===current?'active':''}"></div>`).join('');
   }
 
-  function specsHTML(car){
-    const rows = [
-      ['Año', car.year],
-      ['Plazas', car.seats],
-      ['Puertas', car.doors],
-      ['Cambio', car.trans],
-      ['Combustible', car.fuel],
-      ['Consumo', car.consumo],
-    ].filter(([,v]) => v !== undefined && v !== null && v !== '');
-    return rows.map(([k,v])=>`<div class="spec-chip"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+  function updateCta(){
+    const car = cars[current];
+    if (!car) return;
+    $('ctaPrice').innerHTML = '<span>€</span>' + esc(car.priceperday);
+    $('ctaUnit').textContent = T().perDay;
+    $('mainBookBtn').textContent = T().book;
   }
 
-  function cardHTML(car){
-    const photo = car.photo
-      ? `<img src="${esc(car.photo)}" alt="${esc(car.name)}" loading="lazy">`
-      : carSVG(car);
-    return `
-    <div class="card-photo" style="--photo-bg:${esc(car.color || '#E4D9BE')}">
-      ${photo}
-      <div class="class-stamp">${esc(car.cls)}</div>
-      <div class="years">${esc(car.year)}</div>
-    </div>
-    <div class="perf"></div>
-    <div class="card-details">
-      <h2>${esc(car.name)}</h2>
-      <div class="subline">${esc(car.cls)} · Barcelona</div>
-      <div class="spec-grid">${specsHTML(car)}</div>
-      <div class="features">${(car.features||[]).map(f=>`<div class="feature-tag">${esc(f)}</div>`).join('')}</div>
-      <div class="price-row">
-        <div class="amount">€${esc(car.priceperday)}</div>
-        <div class="unit">/ día</div>
-      </div>
-    </div>`;
-  }
-
-  function renderDeck(){
-    deck.innerHTML = '';
-    cars.forEach((car, i)=>{
-      const el = document.createElement('div');
-      el.className = 'card';
-      el.dataset.index = i;
-      el.innerHTML = cardHTML(car);
-      let offset = i - current;
-      positionCard(el, offset, false);
-      deck.appendChild(el);
-      attachDrag(el);
-    });
-    renderDots();
-    counterTitle.textContent = `Coches · ${current+1}/${cars.length}`;
-  }
-
-  function positionCard(el, offset, animate){
+  function positionCard(el, off, animate){
     el.style.transition = animate ? '' : 'none';
-    if(offset === 0){
-      el.style.transform = 'translateX(0) rotate(0deg)';
-      el.style.opacity = '1';
-      el.style.zIndex = 5;
-      el.style.pointerEvents = 'auto';
-    } else if(offset === 1 || offset === -1){
-      el.style.transform = `translateX(${offset*18}px) scale(0.94) rotate(${offset*3}deg)`;
-      el.style.opacity = '0';
-      el.style.zIndex = 1;
-      el.style.pointerEvents = 'none';
+    if (off === 0){
+      el.style.transform = 'translateX(0) rotate(0)';
+      el.style.opacity = '1'; el.style.zIndex = 5; el.style.pointerEvents = 'auto';
+    } else if (off === 1 || off === -1){
+      el.style.transform = `translateX(${off*20}px) scale(0.95) rotate(${off*2.5}deg)`;
+      el.style.opacity = '0'; el.style.zIndex = 1; el.style.pointerEvents = 'none';
     } else {
-      el.style.transform = `translateX(${offset>0?400:-400}px)`;
-      el.style.opacity = '0';
-      el.style.zIndex = 0;
-      el.style.pointerEvents = 'none';
+      el.style.transform = `translateX(${off>0?420:-420}px)`;
+      el.style.opacity = '0'; el.style.zIndex = 0; el.style.pointerEvents = 'none';
     }
-    if(!animate){ void el.offsetWidth; el.style.transition = ''; }
+    if (!animate){ void el.offsetWidth; el.style.transition = ''; }
   }
 
   function updatePositions(){
     Array.from(deck.children).forEach(el=>{
-      const i = parseInt(el.dataset.index,10);
-      positionCard(el, i-current, true);
+      positionCard(el, parseInt(el.dataset.index,10)-current, true);
     });
     renderDots();
-    counterTitle.textContent = `Coches · ${current+1}/${cars.length}`;
+    updateCta();
   }
 
   function goTo(i){
-    if(i<0) i=0;
-    if(i>cars.length-1) i=cars.length-1;
-    if(i===current) return;
+    if (i < 0) i = 0;
+    if (i > cars.length-1) i = cars.length-1;
+    if (i === current) return;
     current = i;
     haptic('light');
     updatePositions();
   }
 
-  // ---------- drag / swipe ----------
+  // ---- photo navigation (story style) ----
+  function attachPhotoNav(cardEl, car){
+    const phEl = cardEl.querySelector('.ph');
+    if (!phEl) return;
+    phEl.addEventListener('click', (e)=>{
+      const tz = e.target.closest('.tz');
+      if (!tz) return;
+      const ph = photosOf(car);
+      if (ph.length < 2) return;
+      const dir = parseInt(tz.dataset.go,10);
+      let i = (photoIdx[car.id]||0) + dir;
+      if (i < 0) i = ph.length - 1;
+      if (i >= ph.length) i = 0;
+      photoIdx[car.id] = i;
+      haptic('light');
+      phEl.innerHTML = photoAreaHTML(car);
+    });
+  }
+
+  // ---- drag / swipe between cars ----
   function attachDrag(el){
-    let startX=0, startY=0, dx=0, dragging=false, decided=false, isHoriz=false;
-
-    function onDown(e){
-      const idx = parseInt(el.dataset.index,10);
-      if(idx !== current) return;
-      dragging = true; decided=false; isHoriz=false;
+    let sx=0, sy=0, dx=0, drag=false, dec=false, hz=false;
+    const down = e => {
+      if (parseInt(el.dataset.index,10) !== current) return;
+      drag = true; dec = false; hz = false;
       const p = e.touches ? e.touches[0] : e;
-      startX = p.clientX; startY = p.clientY; dx=0;
+      sx = p.clientX; sy = p.clientY; dx = 0;
       el.classList.add('dragging');
-    }
-    function onMove(e){
-      if(!dragging) return;
+    };
+    const move = e => {
+      if (!drag) return;
       const p = e.touches ? e.touches[0] : e;
-      dx = p.clientX - startX;
-      const dy = p.clientY - startY;
-      if(!decided){
-        if(Math.abs(dx) > 6 || Math.abs(dy) > 6){
-          isHoriz = Math.abs(dx) > Math.abs(dy);
-          decided = true;
-        }
+      dx = p.clientX - sx;
+      const dy = p.clientY - sy;
+      if (!dec && (Math.abs(dx) > 6 || Math.abs(dy) > 6)){ hz = Math.abs(dx) > Math.abs(dy); dec = true; }
+      if (hz){
+        if (e.cancelable) e.preventDefault();
+        el.style.transform = `translateX(${dx}px) rotate(${dx/24}deg)`;
       }
-      if(isHoriz){
-        if(e.cancelable) e.preventDefault();
-        el.style.transform = `translateX(${dx}px) rotate(${dx/20}deg)`;
-      }
-    }
-    function onUp(){
-      if(!dragging) return;
-      dragging = false;
+    };
+    const up = () => {
+      if (!drag) return;
+      drag = false;
       el.classList.remove('dragging');
-      if(isHoriz && Math.abs(dx) > 70){
-        if(dx < 0 && current < cars.length-1) goTo(current+1);
-        else if(dx > 0 && current > 0) goTo(current-1);
+      if (hz && Math.abs(dx) > 70){
+        if (dx < 0 && current < cars.length-1) goTo(current+1);
+        else if (dx > 0 && current > 0) goTo(current-1);
         else updatePositions();
-      } else {
-        updatePositions();
-      }
-    }
-    el.addEventListener('mousedown', onDown);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    el.addEventListener('touchstart', onDown, {passive:true});
-    el.addEventListener('touchmove', onMove, {passive:false});
-    el.addEventListener('touchend', onUp);
+      } else updatePositions();
+    };
+    el.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    el.addEventListener('touchstart', down, {passive:true});
+    el.addEventListener('touchmove', move, {passive:false});
+    el.addEventListener('touchend', up);
   }
 
-  // ---------- booking sheet ----------
-  const overlay = document.getElementById('overlay');
-  const bookingSheet = document.getElementById('bookingSheet');
-  const requestsSheet = document.getElementById('requestsSheet');
-  const stampOverlay = document.getElementById('stampOverlay');
-
-  function openSheet(sheet){
-    overlay.classList.add('show');
-    sheet.classList.add('show');
-  }
-  function closeSheets(){
-    overlay.classList.remove('show');
-    bookingSheet.classList.remove('show');
-    requestsSheet.classList.remove('show');
-  }
+  // ================= sheets =================
+  const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), stampOverlay = $('stampOverlay');
+  const openSheet = s => { overlay.classList.add('show'); s.classList.add('show'); };
+  const closeSheets = () => { overlay.classList.remove('show'); bookingSheet.classList.remove('show'); requestsSheet.classList.remove('show'); };
   overlay.addEventListener('click', closeSheets);
 
-  function todayStr(){
-    const d = new Date();
-    return d.toISOString().slice(0,10);
-  }
+  const todayStr = () => new Date().toISOString().slice(0,10);
 
-  document.getElementById('mainBookBtn').addEventListener('click', ()=>{
-    if(!cars.length) return;
+  $('mainBookBtn').addEventListener('click', ()=>{
+    if (!cars.length) return;
     activeBookingCar = cars[current];
-    document.getElementById('bookCarName').textContent = 'Reservar ' + activeBookingCar.name;
-    document.getElementById('bookCarSub').textContent = `€${activeBookingCar.priceperday}/día · ${activeBookingCar.cls}`;
-    const from = document.getElementById('dateFrom');
-    const to = document.getElementById('dateTo');
+    $('bookCarName').textContent = T().bookTitle(activeBookingCar.name);
+    $('bookCarSub').textContent = T().bookSub(activeBookingCar.priceperday);
+    const from = $('dateFrom'), to = $('dateTo');
     from.min = todayStr(); to.min = todayStr();
-    if(!from.value) from.value = todayStr();
-    document.getElementById('dateErr').classList.remove('show');
-    document.getElementById('formErr').classList.remove('show');
-    let prefillName = '';
-    try{ prefillName = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || ''; }catch(e){}
-    if(prefillName && !document.getElementById('nameInput').value){
-      document.getElementById('nameInput').value = prefillName;
-    }
+    if (!from.value) from.value = todayStr();
+    $('dateErr').classList.remove('show');
+    $('formErr').classList.remove('show');
+    let pre = '';
+    try{ pre = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || ''; }catch(e){}
+    if (pre && !$('nameInput').value) $('nameInput').value = pre;
     haptic('medium');
     openSheet(bookingSheet);
   });
 
-  document.getElementById('confirmBtn').addEventListener('click', async ()=>{
-    const from = document.getElementById('dateFrom').value;
-    const to = document.getElementById('dateTo').value;
-    const name = document.getElementById('nameInput').value.trim();
-    const phone = document.getElementById('phoneInput').value.trim();
-    const note = document.getElementById('noteInput').value.trim();
+  $('confirmBtn').addEventListener('click', async ()=>{
+    const from = $('dateFrom').value, to = $('dateTo').value;
+    const name = $('nameInput').value.trim(), phone = $('phoneInput').value.trim(), note = $('noteInput').value.trim();
+    const dateErr = $('dateErr'), formErr = $('formErr');
+    dateErr.classList.remove('show'); formErr.classList.remove('show');
+    formErr.textContent = T().formErr;
 
-    const dateErr = document.getElementById('dateErr');
-    const formErr = document.getElementById('formErr');
-    dateErr.classList.remove('show');
-    formErr.classList.remove('show');
-    formErr.textContent = 'Rellena nombre y teléfono para continuar.';
+    if (!from || !to || new Date(to) <= new Date(from)){ dateErr.classList.add('show'); return; }
+    if (!name || !phone){ formErr.classList.add('show'); return; }
 
-    if(!from || !to || new Date(to) <= new Date(from)){
-      dateErr.classList.add('show');
-      return;
-    }
-    if(!name || !phone){
-      formErr.classList.add('show');
-      return;
-    }
-
-    const btn = document.getElementById('confirmBtn');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
+    const btn = $('confirmBtn');
+    btn.disabled = true; btn.textContent = T().sending;
 
     let tgUser = null, tgUserId = null;
     try{
       const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
-      if(u){ tgUser = u.username || null; tgUserId = u.id || null; }
+      if (u){ tgUser = u.username || null; tgUserId = u.id || null; }
     }catch(e){}
 
     const booking = {
@@ -945,63 +929,96 @@ body{
       createdAt: new Date().toISOString(),
       tgUser, tgUserId,
       status: 'new',
+      lang,
     };
 
     try{
       await saveBooking(booking);
-      notify('success');
+      notifyH('success');
       closeSheets();
       stampOverlay.classList.add('show');
-      setTimeout(()=>{ stampOverlay.classList.remove('show'); }, 1800);
-      document.getElementById('noteInput').value = '';
+      setTimeout(()=>stampOverlay.classList.remove('show'), 1900);
+      $('noteInput').value = '';
     }catch(e){
-      notify('error');
-      formErr.textContent = 'No se pudo enviar la solicitud. Inténtalo de nuevo.';
+      notifyH('error');
+      formErr.textContent = T().sendErr;
       formErr.classList.add('show');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Confirmar solicitud';
+    }finally{
+      btn.disabled = false; btn.textContent = T().confirm;
     }
   });
 
-  // ---------- my requests sheet ----------
-  document.getElementById('reqBtn').addEventListener('click', ()=>{
+  $('reqBtn').addEventListener('click', ()=>{
     haptic('light');
-    const list = document.getElementById('reqList');
+    renderRequests();
     openSheet(requestsSheet);
-    const bookings = loadMyBookings();
-    if(!bookings.length){
-      list.innerHTML = '<div class="req-empty">Todavía no has enviado solicitudes.<br>Elige un coche y reserva.</div>';
-      return;
-    }
-    list.innerHTML = bookings.map(b=>`
+  });
+
+  function renderRequests(){
+    const list = $('reqList');
+    const items = loadMy();
+    if (!items.length){ list.innerHTML = `<div class="req-empty">${T().reqEmpty}</div>`; return; }
+    const locale = lang === 'ru' ? 'ru-RU' : (lang === 'es' ? 'es-ES' : 'en-GB');
+    list.innerHTML = items.map(b=>`
       <div class="req-item">
         <div class="top">
           <div class="car">${esc(b.carName)}</div>
-          <div class="when">${new Date(b.createdAt).toLocaleDateString('es-ES',{day:'2-digit',month:'short'})}</div>
+          <div class="when">${new Date(b.createdAt).toLocaleDateString(locale,{day:'2-digit',month:'short'})}</div>
         </div>
         <div class="meta">
-          ${esc(b.from)} → ${esc(b.to)} · €${esc(b.priceperday)}/día<br>
+          ${esc(b.from)} → ${esc(b.to)} · €${esc(b.priceperday)}<br>
           ${esc(b.name)} · ${esc(b.phone)}
           ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
+  }
+
+  $('clearReq').addEventListener('click', ()=>{
+    const doClear = () => { clearMy(); renderRequests(); };
+    if (tg && tg.showConfirm){
+      try{ tg.showConfirm(T().clearAsk, ok => { if (ok) doClear(); }); return; }catch(e){}
+    }
+    if (confirm(T().clearAsk)) doClear();
   });
 
-  document.getElementById('clearReq').addEventListener('click', ()=>{
-    if(!confirm('¿Borrar el historial local de solicitudes?')) return;
-    clearMyBookings();
-    document.getElementById('reqList').innerHTML = '<div class="req-empty">Todavía no has enviado solicitudes.<br>Elige un coche y reserva.</div>';
+  // ================= language =================
+  function applyLang(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+    $('loadingText').textContent = T().loading;
+    $('swipeHint').textContent = T().swipe;
+    $('lblFrom').textContent = T().from;
+    $('lblTo').textContent = T().to;
+    $('lblName').textContent = T().name;
+    $('lblPhone').textContent = T().phone;
+    $('lblNote').textContent = T().note;
+    $('noteInput').placeholder = T().notePh;
+    $('confirmBtn').textContent = T().confirm;
+    $('reqTitle').textContent = T().reqTitle;
+    $('reqSub').textContent = T().reqSub;
+    $('clearReq').textContent = T().clear;
+    $('stampT1').textContent = T().ok1;
+    $('stampT2').textContent = T().ok2;
+    if (cars.length) renderDeck();
+  }
+
+  $('langSwitch').addEventListener('click', e=>{
+    const b = e.target.closest('.lang-btn');
+    if (!b || b.dataset.lang === lang) return;
+    lang = b.dataset.lang;
+    localStorage.setItem(LANG_KEY, lang);
+    haptic('light');
+    applyLang();
   });
 
-  // ---------- keyboard nav for desktop testing ----------
-  window.addEventListener('keydown', (e)=>{
-    if(e.key === 'ArrowRight') goTo(current+1);
-    if(e.key === 'ArrowLeft') goTo(current-1);
+  // ================= keyboard (desktop) =================
+  window.addEventListener('keydown', e=>{
+    if (e.key === 'ArrowRight') goTo(current+1);
+    if (e.key === 'ArrowLeft') goTo(current-1);
   });
 
-  // ---------- init ----------
+  // ================= init =================
+  applyLang();
   (async function init(){
     await loadFleet();
     renderDeck();
