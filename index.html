@@ -1,43 +1,51 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pablo Auto Spain — Rent a Car Barcelona</title>
+<title>StuffDrive — Rent a Car Barcelona</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="firebase-config.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
 :root{
-  --bg:#0A0A0C;
-  --bg-soft:#121216;
-  --card:#16161B;
-  --card-2:#1D1D24;
+  --bg:#0E0E12;
+  --bg-soft:#17171C;
+  --card:#1A1A20;
+  --card-2:#232329;
   --line:rgba(255,255,255,0.08);
-  --line-2:rgba(255,255,255,0.14);
-  --text:#F5F3EE;
+  --line-2:rgba(255,255,255,0.16);
+  --text:#F4F3F0;
   --text-dim:#9C9AA3;
-  --text-faint:#5F5D66;
+  --text-faint:#67656E;
   --amber:#E8A33D;
-  --amber-soft:rgba(232,163,61,0.14);
-  --amber-line:rgba(232,163,61,0.35);
+  --amber-dark:#161005;
   --green:#3DD68C;
   --red:#F05D45;
+  --scrim:rgba(8,8,10,0.92);
   --safe-bottom:env(safe-area-inset-bottom, 0px);
-  --r-lg:24px;
-  --r-md:16px;
-  --r-sm:12px;
+}
+:root[data-theme="light"]{
+  --bg:#F2F2F7;
+  --bg-soft:#FFFFFF;
+  --card:#FFFFFF;
+  --card-2:#F2F2F7;
+  --line:rgba(0,0,0,0.07);
+  --line-2:rgba(0,0,0,0.14);
+  --text:#1B1B20;
+  --text-dim:#6E6E76;
+  --text-faint:#9A9AA2;
+  --scrim:rgba(8,8,10,0.88);
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;height:100%;overflow:hidden;}
 body{
-  font-family:'Manrope',sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   display:flex;justify-content:center;
   overscroll-behavior:none;
+  transition:background .25s;
 }
 
 #app{
@@ -46,81 +54,68 @@ body{
   position:relative;
   display:flex;flex-direction:column;
   overflow:hidden;
-  background:
-    radial-gradient(420px 260px at 85% -8%, rgba(232,163,61,0.10), transparent 65%),
-    radial-gradient(600px 420px at 15% -12%, rgba(60,80,120,0.10), transparent 60%),
-    var(--bg);
 }
+body.tg #app{height:var(--tg-viewport-stable-height,100dvh);}
 
 /* ============ HEADER ============ */
 .header{
-  padding:14px 18px 10px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 14px 8px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
   flex-shrink:0;
 }
 .brand{display:flex;flex-direction:column;gap:1px;min-width:0;}
 .brand .eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9.5px;letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--amber);
-  white-space:nowrap;
+  font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--amber);white-space:nowrap;
 }
 .brand h1{
-  font-size:17px;font-weight:800;letter-spacing:0.01em;
+  font-size:16px;font-weight:800;letter-spacing:0.02em;
   margin:0;color:var(--text);white-space:nowrap;
 }
-.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.header-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
 
 .lang-switch{
   display:flex;
   background:var(--bg-soft);
   border:1px solid var(--line);
   border-radius:50px;
-  padding:3px;
+  padding:2.5px;
 }
 .lang-btn{
   border:none;background:transparent;
   color:var(--text-faint);
-  font-family:'JetBrains Mono',monospace;
-  font-size:10.5px;font-weight:600;letter-spacing:0.04em;
-  padding:6px 9px;border-radius:50px;
-  cursor:pointer;
-  transition:all .2s;
+  font-family:inherit;
+  font-size:10.5px;font-weight:700;
+  padding:6px 8px;border-radius:50px;
+  cursor:pointer;transition:all .2s;
 }
-.lang-btn.active{
-  background:var(--amber);
-  color:#141414;
-}
+.lang-btn.active{background:var(--amber);color:var(--amber-dark);}
 
 .icon-btn{
-  width:36px;height:36px;border-radius:50%;
+  width:34px;height:34px;border-radius:50%;
   background:var(--bg-soft);
   border:1px solid var(--line);
   display:flex;align-items:center;justify-content:center;
   color:var(--text-dim);cursor:pointer;
-  transition:all .2s;
+  transition:transform .15s;
+  flex-shrink:0;
 }
-.icon-btn:active{transform:scale(0.92);background:var(--card-2);}
+.icon-btn:active{transform:scale(0.9);}
 
 /* ============ DECK ============ */
-.deck-wrap{
-  flex:1;position:relative;
-  padding:4px 16px 0;
-  min-height:0;
-}
+.deck-wrap{flex:1;position:relative;padding:2px 14px 0;min-height:0;}
 .deck{position:relative;width:100%;height:100%;}
 .deck-loading{
   position:absolute;inset:0;
   display:flex;flex-direction:column;gap:14px;
   align-items:center;justify-content:center;
-  color:var(--text-faint);
-  font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.08em;
+  color:var(--text-faint);font-size:12px;font-weight:600;letter-spacing:0.06em;
 }
 .spinner{
   width:26px;height:26px;border-radius:50%;
   border:2.5px solid var(--line-2);
   border-top-color:var(--amber);
-  animation:spin 0.9s linear infinite;
+  animation:spin .9s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
 
@@ -128,308 +123,305 @@ body{
   position:absolute;inset:0;
   background:var(--card);
   border:1px solid var(--line);
-  border-radius:var(--r-lg);
+  border-radius:20px;
   overflow:hidden;
   display:flex;flex-direction:column;
   touch-action:pan-y;
   will-change:transform;
   transition:transform .38s cubic-bezier(.22,.9,.24,1), opacity .38s;
-  box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  box-shadow:0 18px 48px rgba(0,0,0,0.4);
 }
+:root[data-theme="light"] .card{box-shadow:0 14px 40px rgba(0,0,0,0.14);}
 .card.dragging{transition:none;}
 
 /* ---- photo area ---- */
 .ph{
-  position:relative;
-  height:54%;flex-shrink:0;
-  background:#101014;
-  overflow:hidden;
-  user-select:none;
+  position:relative;height:52%;flex-shrink:0;
+  background:#101014;overflow:hidden;user-select:none;
+  cursor:pointer;
 }
-.ph img{
-  position:absolute;inset:0;
-  width:100%;height:100%;object-fit:cover;
-  opacity:0;transition:opacity .3s;
+.ph .bgimg{
+  position:absolute;inset:-24px;
+  width:calc(100% + 48px);height:calc(100% + 48px);
+  object-fit:cover;
+  filter:blur(22px) brightness(0.72) saturate(1.15);
 }
-.ph img.on{opacity:1;}
-.ph .ph-shimmer{
-  position:absolute;inset:0;
-  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,0.05) 50%,transparent 70%);
-  background-size:250% 100%;
-  animation:shim 1.4s infinite;
+.ph .fgimg{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;object-fit:contain;object-position:center;
+  opacity:0;transition:opacity .28s;
 }
-@keyframes shim{0%{background-position:120% 0}100%{background-position:-120% 0}}
-
+.ph .fgimg.on{opacity:1;}
 .ph .scrim{
-  position:absolute;left:0;right:0;bottom:0;height:46%;
-  background:linear-gradient(to top, rgba(10,10,12,0.92), rgba(10,10,12,0.4) 55%, transparent);
+  position:absolute;left:0;right:0;bottom:0;height:42%;z-index:2;
+  background:linear-gradient(to top, var(--scrim), transparent);
   pointer-events:none;
 }
 .ph .scrim-top{
-  position:absolute;left:0;right:0;top:0;height:56px;
-  background:linear-gradient(to bottom, rgba(10,10,12,0.55), transparent);
+  position:absolute;left:0;right:0;top:0;height:52px;z-index:2;
+  background:linear-gradient(to bottom, rgba(8,8,10,0.5), transparent);
   pointer-events:none;
 }
-
-/* story-style progress */
-.ph .segs{
-  position:absolute;top:10px;left:12px;right:12px;
-  display:flex;gap:4px;z-index:4;
-}
-.ph .seg{
-  flex:1;height:2.5px;border-radius:3px;
-  background:rgba(255,255,255,0.28);
-  overflow:hidden;
-}
-.ph .seg i{
-  display:block;height:100%;width:0%;
-  background:#fff;border-radius:3px;
-  transition:width .2s;
-}
+.ph .segs{position:absolute;top:9px;left:12px;right:12px;display:flex;gap:4px;z-index:4;}
+.ph .seg{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,0.3);overflow:hidden;}
+.ph .seg i{display:block;height:100%;width:0%;background:#fff;border-radius:3px;}
 .ph .seg.done i{width:100%;}
 .ph .seg.now i{width:100%;background:var(--amber);}
-
-/* tap zones */
-.ph .tz{position:absolute;top:0;bottom:0;width:34%;z-index:3;}
+.ph .tz{position:absolute;top:0;bottom:0;width:50%;z-index:3;}
 .ph .tz.l{left:0;}
 .ph .tz.r{right:0;}
 
 .chip-class{
-  position:absolute;top:22px;right:14px;z-index:4;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  position:absolute;top:20px;right:12px;z-index:4;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
   color:var(--amber);
-  background:rgba(10,10,12,0.55);
-  border:1px solid var(--amber-line);
+  background:rgba(10,10,12,0.6);
+  border:1px solid rgba(232,163,61,0.4);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  padding:6px 11px;border-radius:50px;
+  padding:5px 10px;border-radius:50px;
 }
-
-.ph .title-block{
-  position:absolute;left:16px;right:16px;bottom:12px;z-index:4;
-  pointer-events:none;
-}
+.ph .title-block{position:absolute;left:14px;right:14px;bottom:10px;z-index:4;pointer-events:none;}
 .ph .title-block .nm{
-  font-size:24px;font-weight:800;letter-spacing:-0.01em;
+  font-size:22px;font-weight:800;letter-spacing:-0.01em;
   color:#fff;line-height:1.15;
-  text-shadow:0 2px 14px rgba(0,0,0,0.5);
+  text-shadow:0 2px 12px rgba(0,0,0,0.55);
 }
 .ph .title-block .sub{
-  margin-top:3px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;color:rgba(255,255,255,0.75);
-  letter-spacing:0.05em;
+  margin-top:2px;font-size:11.5px;font-weight:600;
+  color:rgba(255,255,255,0.8);
 }
+.ph .cam-hint{
+  position:absolute;bottom:12px;right:12px;z-index:4;
+  display:flex;align-items:center;gap:5px;
+  font-size:10.5px;font-weight:700;
+  color:rgba(255,255,255,0.85);
+  background:rgba(10,10,12,0.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  padding:4px 9px;border-radius:50px;
+  pointer-events:none;
+}
+
+/* car nav arrows */
+.nav-arrow{
+  position:absolute;top:26%;z-index:6;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(14,14,18,0.55);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;cursor:pointer;
+  transition:opacity .2s, transform .15s;
+}
+.nav-arrow:active{transform:scale(0.88);}
+.nav-arrow.l{left:6px;}
+.nav-arrow.r{right:6px;}
+.nav-arrow.off{opacity:0;pointer-events:none;}
 
 /* ---- details ---- */
 .details{
-  flex:1;min-height:0;
-  overflow-y:auto;
-  padding:16px 16px 12px;
+  flex:1;min-height:0;overflow-y:auto;
+  padding:14px 14px 12px;
   -webkit-overflow-scrolling:touch;
 }
-.spec-row{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:8px;margin-bottom:12px;
-}
+.spec-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:11px;}
 .spec{
   background:var(--card-2);
   border:1px solid var(--line);
-  border-radius:var(--r-sm);
-  padding:10px 10px 9px;
-  display:flex;flex-direction:column;gap:3px;
+  border-radius:12px;
+  padding:9px 9px 8px;
+  display:flex;flex-direction:column;gap:2px;
 }
-.spec .k{
-  font-family:'JetBrains Mono',monospace;
-  font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--text-faint);
-}
-.spec .v{font-size:13px;font-weight:700;color:var(--text);}
-
+.spec .k{font-size:9px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-faint);}
+.spec .v{font-size:12.5px;font-weight:700;color:var(--text);}
 .feats{display:flex;flex-wrap:wrap;gap:6px;}
 .feat{
-  font-size:11.5px;font-weight:600;
-  color:var(--text-dim);
-  background:var(--bg-soft);
+  font-size:11.5px;font-weight:600;color:var(--text-dim);
+  background:var(--card-2);
   border:1px solid var(--line);
-  padding:5px 11px;border-radius:50px;
+  padding:5px 10px;border-radius:50px;
 }
 .feat::before{
-  content:'';display:inline-block;
-  width:5px;height:5px;border-radius:50%;
-  background:var(--amber);
-  margin-right:7px;vertical-align:1.5px;
+  content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--amber);margin-right:6px;vertical-align:1.5px;
 }
 
-/* dots */
-.dots{
-  display:flex;justify-content:center;gap:5px;
-  padding:10px 0 2px;flex-shrink:0;
-}
-.dot{
-  width:5px;height:5px;border-radius:50%;
-  background:rgba(255,255,255,0.18);
-  transition:all .25s;
-}
+/* dots + hint */
+.dots{display:flex;justify-content:center;gap:5px;padding:9px 0 2px;flex-shrink:0;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--line-2);transition:all .25s;}
 .dot.active{width:18px;border-radius:3px;background:var(--amber);}
-
-/* ============ CTA BAR ============ */
-.cta-bar{
-  padding:10px 16px calc(14px + var(--safe-bottom));
-  display:flex;align-items:center;gap:12px;
-  flex-shrink:0;
-}
-.price-box{display:flex;flex-direction:column;flex-shrink:0;}
-.price-box .p{
-  font-size:22px;font-weight:800;color:var(--text);
-  letter-spacing:-0.01em;line-height:1.05;
-}
-.price-box .p span{color:var(--amber);}
-.price-box .u{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;
+.swipe-hint{
+  text-align:center;font-size:10.5px;font-weight:600;
   color:var(--text-faint);
+  padding:3px 0 2px;flex-shrink:0;
 }
+
+/* ============ CTA (browser fallback) ============ */
+.cta-bar{
+  padding:9px 14px calc(12px + var(--safe-bottom));
+  display:none;align-items:center;gap:12px;flex-shrink:0;
+}
+body:not(.tg) .cta-bar{display:flex;}
+.price-box{display:flex;flex-direction:column;flex-shrink:0;}
+.price-box .p{font-size:21px;font-weight:800;line-height:1.05;}
+.price-box .p span{color:var(--amber);}
+.price-box .u{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-faint);}
 .book-btn{
-  flex:1;border:none;
-  border-radius:var(--r-md);
+  flex:1;border:none;border-radius:14px;
   background:linear-gradient(135deg,#F0B254,#DD8F2A);
-  color:#161005;
-  font-family:'Manrope',sans-serif;
-  font-weight:800;font-size:15px;letter-spacing:0.01em;
-  padding:15px 10px;
-  cursor:pointer;
-  box-shadow:0 8px 26px rgba(232,163,61,0.28);
+  color:var(--amber-dark);
+  font-family:inherit;font-weight:800;font-size:15px;
+  padding:15px 10px;cursor:pointer;
+  box-shadow:0 8px 24px rgba(232,163,61,0.26);
   transition:transform .15s;
 }
 .book-btn:active{transform:scale(0.97);}
+body.tg .dots{padding-bottom:8px;}
+body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
 
 /* ============ SHEETS ============ */
 .overlay{
-  position:absolute;inset:0;
-  background:rgba(5,5,7,0.66);
+  position:absolute;inset:0;z-index:20;
+  background:rgba(5,5,7,0.6);
   backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
-  opacity:0;pointer-events:none;
-  transition:opacity .25s;z-index:20;
+  opacity:0;pointer-events:none;transition:opacity .25s;
 }
 .overlay.show{opacity:1;pointer-events:auto;}
-
 .sheet{
-  position:absolute;left:0;right:0;bottom:0;
+  position:absolute;left:0;right:0;bottom:0;z-index:21;
   background:var(--bg-soft);
   border-top:1px solid var(--line-2);
-  border-radius:26px 26px 0 0;
-  padding:8px 20px calc(20px + var(--safe-bottom));
-  transform:translateY(102%);
+  border-radius:22px 22px 0 0;
+  padding:8px 18px calc(18px + var(--safe-bottom));
+  transform:translateY(103%);
   transition:transform .34s cubic-bezier(.22,.9,.24,1);
-  z-index:21;max-height:90%;
-  overflow-y:auto;
-  color:var(--text);
+  max-height:92%;overflow-y:auto;color:var(--text);
 }
 .sheet.show{transform:translateY(0);}
-.sheet-handle{
-  width:36px;height:4px;border-radius:4px;
-  background:var(--line-2);
-  margin:8px auto 16px;
-}
-.sheet h3{font-size:19px;font-weight:800;margin:0 0 4px;}
-.sheet .sub{font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.45;}
+.sheet-handle{width:36px;height:4px;border-radius:4px;background:var(--line-2);margin:8px auto 14px;}
+.sheet h3{font-size:18px;font-weight:800;margin:0 0 12px;}
 
-.field{margin-bottom:13px;}
+.book-car-row{
+  display:flex;align-items:center;gap:11px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;padding:9px;margin-bottom:14px;
+}
+.book-car-row img{width:64px;height:48px;object-fit:cover;border-radius:9px;background:#101014;}
+.book-car-row .bi{min-width:0;}
+.book-car-row .bn{font-size:14.5px;font-weight:800;}
+.book-car-row .bp{font-size:12px;font-weight:600;color:var(--text-dim);margin-top:1px;}
+
+.field{margin-bottom:12px;}
 .field label{
-  display:block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--text-faint);
-  margin-bottom:6px;
+  display:block;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--text-faint);margin-bottom:5px;
 }
 .field input,.field textarea{
   width:100%;
   border:1.5px solid var(--line-2);
-  border-radius:var(--r-sm);
-  padding:13px 14px;
-  font-family:'Manrope',sans-serif;font-size:15px;
-  color:var(--text);
-  background:var(--card);
-  outline:none;
-  transition:border-color .2s;
-  color-scheme:dark;
+  border-radius:12px;
+  padding:12px 13px;
+  font-family:inherit;font-size:15px;
+  color:var(--text);background:var(--card);
+  outline:none;transition:border-color .2s;
 }
+:root[data-theme="dark"] .field input,
+:root[data-theme="dark"] .field textarea{color-scheme:dark;}
 .field input:focus,.field textarea:focus{border-color:var(--amber);}
-.date-row{display:flex;gap:10px;}
+.date-row{display:flex;gap:9px;}
 .date-row .field{flex:1;}
 
-.err{
-  color:var(--red);font-size:12px;
-  margin:-6px 0 10px;display:none;
+.quick-days{display:flex;gap:6px;margin:-4px 0 12px;}
+.qd{
+  flex:1;border:1px solid var(--line-2);background:var(--card);
+  color:var(--text-dim);
+  font-family:inherit;font-size:12px;font-weight:700;
+  border-radius:50px;padding:7px 0;cursor:pointer;transition:all .15s;
 }
+.qd.active{background:var(--amber);border-color:var(--amber);color:var(--amber-dark);}
+
+.total-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);
+  border:1px dashed var(--line-2);
+  border-radius:12px;
+  padding:11px 14px;margin-bottom:13px;
+}
+.total-row .tl{font-size:12.5px;font-weight:600;color:var(--text-dim);}
+.total-row .tv{font-size:17px;font-weight:800;}
+.total-row .tv span{color:var(--amber);}
+
+.err{color:var(--red);font-size:12px;font-weight:600;margin:-4px 0 10px;display:none;}
 .err.show{display:block;}
 
 .confirm-btn{
-  width:100%;border:none;
-  border-radius:var(--r-md);
+  width:100%;border:none;border-radius:14px;
   background:linear-gradient(135deg,#F0B254,#DD8F2A);
-  color:#161005;
-  font-weight:800;font-size:15px;
+  color:var(--amber-dark);
+  font-family:inherit;font-weight:800;font-size:15px;
   padding:15px;cursor:pointer;margin-top:2px;
   transition:transform .15s, opacity .2s;
 }
 .confirm-btn:active{transform:scale(0.98);}
 .confirm-btn:disabled{opacity:0.55;}
 
-/* requests */
 .req-item{
-  border:1px solid var(--line);
-  background:var(--card);
-  border-radius:var(--r-md);
-  padding:13px 14px;margin-bottom:10px;
+  border:1px solid var(--line);background:var(--card);
+  border-radius:14px;padding:12px 13px;margin-bottom:9px;
 }
-.req-item .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.req-item .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;}
 .req-item .car{font-weight:800;font-size:14px;}
-.req-item .when{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-faint);}
+.req-item .when{font-size:11px;font-weight:600;color:var(--text-faint);}
 .req-item .meta{font-size:12.5px;color:var(--text-dim);line-height:1.55;}
-.req-empty{text-align:center;padding:34px 10px;color:var(--text-faint);font-size:13px;line-height:1.5;}
-.clear-link{
-  display:block;text-align:center;
-  font-size:12px;color:var(--text-faint);
-  margin-top:14px;text-decoration:underline;cursor:pointer;
-}
+.req-empty{text-align:center;padding:32px 10px;color:var(--text-faint);font-size:13px;line-height:1.5;}
+.sheet .sub{font-size:12.5px;color:var(--text-dim);margin:-6px 0 14px;}
+.clear-link{display:block;text-align:center;font-size:12px;color:var(--text-faint);margin-top:12px;text-decoration:underline;cursor:pointer;}
 
 /* success overlay */
 #stampOverlay{
   position:absolute;inset:0;z-index:30;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(5,5,7,0.8);
+  background:rgba(5,5,7,0.78);
   backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
   opacity:0;pointer-events:none;transition:opacity .25s;
 }
 #stampOverlay.show{opacity:1;}
-.stamp{
-  text-align:center;
-  transform:scale(0.7);
-  transition:transform .45s cubic-bezier(.34,1.56,.64,1);
-}
+.stamp{text-align:center;transform:scale(0.7);transition:transform .45s cubic-bezier(.34,1.56,.64,1);}
 #stampOverlay.show .stamp{transform:scale(1);}
 .stamp .ring{
-  width:78px;height:78px;border-radius:50%;
+  width:76px;height:76px;border-radius:50%;
   border:2.5px solid var(--green);
   display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;
+  margin:0 auto 15px;
   box-shadow:0 0 40px rgba(61,214,140,0.25);
 }
-.stamp .t1{font-size:21px;font-weight:800;color:var(--text);}
-.stamp .t2{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;color:var(--text-dim);
-  margin-top:6px;letter-spacing:0.06em;
-}
+.stamp .t1{font-size:20px;font-weight:800;color:#fff;}
+.stamp .t2{font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);margin-top:5px;}
 
-.swipe-hint{
-  text-align:center;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;letter-spacing:0.08em;
-  color:var(--text-faint);
-  padding:4px 0 2px;flex-shrink:0;
+/* onboarding hint */
+#hintOverlay{
+  position:absolute;inset:0;z-index:15;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(5,5,7,0.72);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  border-radius:20px;
+}
+#hintOverlay.show{display:flex;}
+.hint-box{text-align:center;padding:20px;color:#fff;}
+.hint-line{display:flex;align-items:center;gap:12px;margin-bottom:18px;text-align:left;}
+.hint-ic{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;
+}
+.hint-tx{font-size:13.5px;font-weight:600;line-height:1.4;color:rgba(255,255,255,0.92);}
+.hint-ok{
+  border:none;border-radius:50px;
+  background:var(--amber);color:var(--amber-dark);
+  font-family:inherit;font-weight:800;font-size:14px;
+  padding:11px 34px;cursor:pointer;margin-top:4px;
 }
 
 ::-webkit-scrollbar{width:0;height:0;}
@@ -442,7 +434,7 @@ body{
   <div class="header">
     <div class="brand">
       <span class="eyebrow">Barcelona</span>
-      <h1>PABLO AUTO SPAIN</h1>
+      <h1>STUFFDRIVE</h1>
     </div>
     <div class="header-right">
       <div class="lang-switch" id="langSwitch">
@@ -450,15 +442,31 @@ body{
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="ru">RU</button>
       </div>
+      <div class="icon-btn" id="themeBtn">
+        <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 12.4A8 8 0 1 1 11.6 4a6.5 6.5 0 0 0 8.4 8.4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
       <div class="icon-btn" id="reqBtn">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/></svg>
       </div>
     </div>
   </div>
 
   <div class="deck-wrap">
     <div class="deck" id="deck">
-      <div class="deck-loading"><div class="spinner"></div><span id="loadingText">…</span></div>
+      <div class="deck-loading"><div class="spinner"></div><span id="loadingText"></span></div>
+    </div>
+
+    <button class="nav-arrow l off" id="prevBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14.5 6L8.5 12l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="nav-arrow r" id="nextBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9.5 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+    <div id="hintOverlay">
+      <div class="hint-box">
+        <div class="hint-line"><div class="hint-ic">↔️</div><div class="hint-tx" id="hintSwipe"></div></div>
+        <div class="hint-line"><div class="hint-ic">📸</div><div class="hint-tx" id="hintTap"></div></div>
+        <div class="hint-line"><div class="hint-ic">🗓</div><div class="hint-tx" id="hintBook"></div></div>
+        <button class="hint-ok" id="hintOk">OK</button>
+      </div>
     </div>
 
     <div class="overlay" id="overlay"></div>
@@ -466,8 +474,14 @@ body{
     <!-- booking sheet -->
     <div class="sheet" id="bookingSheet">
       <div class="sheet-handle"></div>
-      <h3 id="bookCarName"></h3>
-      <div class="sub" id="bookCarSub"></div>
+      <h3 id="bookTitle"></h3>
+      <div class="book-car-row">
+        <img id="bookThumb" src="" alt="">
+        <div class="bi">
+          <div class="bn" id="bookCarName"></div>
+          <div class="bp" id="bookCarPrice"></div>
+        </div>
+      </div>
       <div class="date-row">
         <div class="field">
           <label id="lblFrom"></label>
@@ -478,7 +492,17 @@ body{
           <input type="date" id="dateTo">
         </div>
       </div>
+      <div class="quick-days" id="quickDays">
+        <button class="qd" data-d="1"></button>
+        <button class="qd" data-d="3"></button>
+        <button class="qd" data-d="7"></button>
+        <button class="qd" data-d="14"></button>
+      </div>
       <div class="err" id="dateErr"></div>
+      <div class="total-row">
+        <div class="tl" id="totalLabel"></div>
+        <div class="tv" id="totalValue">—</div>
+      </div>
       <div class="field">
         <label id="lblName"></label>
         <input type="text" id="nameInput">
@@ -534,67 +558,75 @@ body{
 
   // ================= Telegram =================
   const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-  if (tg) {
-    try{
-      tg.ready(); tg.expand();
-      tg.setHeaderColor && tg.setHeaderColor('#0A0A0C');
-      tg.setBackgroundColor && tg.setBackgroundColor('#0A0A0C');
-    }catch(e){}
-  }
+  const inTG = !!(tg && tg.initDataUnsafe && (tg.initDataUnsafe.user || tg.platform !== 'unknown'));
+  if (tg){ try{ tg.ready(); tg.expand(); }catch(e){} }
+  if (inTG) document.body.classList.add('tg');
   const haptic = k => { try{ tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(k||'light'); }catch(e){} };
   const notifyH = k => { try{ tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(k); }catch(e){} };
 
   // ================= i18n =================
   const I18N = {
     es: {
-      loading:'CARGANDO COCHES', swipe:'← desliza para ver más →',
-      perDay:'por día', book:'Reservar',
-      bookTitle:c=>'Reservar '+c, bookSub:(p)=>'€'+p+'/día · Te contactaremos para confirmar.',
-      from:'Recogida', to:'Devolución', name:'Nombre', phone:'Teléfono / Telegram', note:'Comentario (opcional)',
-      notePh:'Hora de recogida, aeropuerto…', confirm:'Confirmar solicitud', sending:'Enviando…',
+      loading:'Cargando coches…', swipe:'Desliza la tarjeta para cambiar de coche',
+      day:'día', days:n=>n===1?'1 día':n+' días', perDay:'al día', book:'Reservar',
+      bookSheetTitle:'Reserva', from:'Recogida', to:'Devolución',
+      total:'Total', name:'Nombre', phone:'Teléfono / Telegram', note:'Comentario (opcional)',
+      notePh:'Hora de recogida, aeropuerto…', confirm:'Enviar solicitud', sending:'Enviando…',
       dateErr:'La fecha de devolución debe ser posterior a la de recogida.',
       formErr:'Rellena nombre y teléfono para continuar.',
       sendErr:'No se pudo enviar. Inténtalo de nuevo.',
-      ok1:'¡Reservado!', ok2:'Te contactaremos pronto',
+      ok1:'¡Solicitud enviada!', ok2:'Te contactaremos pronto',
       reqTitle:'Mis solicitudes', reqSub:'Solicitudes enviadas desde este dispositivo.',
       reqEmpty:'Todavía no has enviado solicitudes.<br>Elige un coche y reserva.',
       clear:'Borrar historial local', clearAsk:'¿Borrar el historial local?',
+      photos:'fotos',
+      hintSwipe:'Desliza la tarjeta a la izquierda o derecha para ver otros coches',
+      hintTap:'Toca la foto para ver más fotos del coche',
+      hintBook:'Pulsa «Reservar» abajo, elige las fechas y envía la solicitud',
       specs:{year:'Año',seats:'Plazas',doors:'Puertas',trans:'Cambio',fuel:'Combustible',consumo:'Consumo'},
       vals:{auto:'Automático',manual:'Manual',petrol:'Gasolina',diesel:'Diésel',hybrid:'Híbrido',electric:'Eléctrico'},
       cls:{estate:'Familiar',muscle:'Deportivo',suv:'SUV',compact:'Compacto',premium:'Premium',economy:'Económico',electric:'Eléctrico',convertible:'Cabrio'},
       feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Cuero',panorama:'Techo panorámico',camera:'Cámara trasera',sensors:'Sensores',cruise:'Control crucero',heated:'Asientos calef.',keyless:'Keyless',led:'Faros LED',awd:'4×4','7seats':'7 plazas',navi:'Navegador',usb:'USB',convertible:'Descapotable',sport:'Modo Sport'}
     },
     en: {
-      loading:'LOADING CARS', swipe:'← swipe to see more →',
-      perDay:'per day', book:'Book now',
-      bookTitle:c=>'Book '+c, bookSub:(p)=>'€'+p+'/day · We will contact you to confirm.',
-      from:'Pick-up', to:'Return', name:'Name', phone:'Phone / Telegram', note:'Comment (optional)',
+      loading:'Loading cars…', swipe:'Swipe the card to switch cars',
+      day:'day', days:n=>n===1?'1 day':n+' days', perDay:'per day', book:'Book',
+      bookSheetTitle:'Booking', from:'Pick-up', to:'Return',
+      total:'Total', name:'Name', phone:'Phone / Telegram', note:'Comment (optional)',
       notePh:'Pick-up time, airport…', confirm:'Send request', sending:'Sending…',
       dateErr:'Return date must be after pick-up date.',
       formErr:'Fill in name and phone to continue.',
       sendErr:'Could not send. Please try again.',
-      ok1:'Booked!', ok2:'We will contact you soon',
+      ok1:'Request sent!', ok2:'We will contact you soon',
       reqTitle:'My requests', reqSub:'Requests sent from this device.',
       reqEmpty:'No requests yet.<br>Pick a car and book it.',
       clear:'Clear local history', clearAsk:'Clear local history?',
+      photos:'photos',
+      hintSwipe:'Swipe the card left or right to browse cars',
+      hintTap:'Tap the photo to see more pictures of the car',
+      hintBook:'Press “Book” below, pick your dates and send the request',
       specs:{year:'Year',seats:'Seats',doors:'Doors',trans:'Gearbox',fuel:'Fuel',consumo:'Consumption'},
       vals:{auto:'Automatic',manual:'Manual',petrol:'Petrol',diesel:'Diesel',hybrid:'Hybrid',electric:'Electric'},
       cls:{estate:'Estate',muscle:'Muscle car',suv:'SUV',compact:'Compact',premium:'Premium',economy:'Economy',electric:'Electric',convertible:'Convertible'},
       feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Leather',panorama:'Panoramic roof',camera:'Rear camera',sensors:'Parking sensors',cruise:'Cruise control',heated:'Heated seats',keyless:'Keyless',led:'LED lights',awd:'AWD','7seats':'7 seats',navi:'Navigation',usb:'USB',convertible:'Convertible',sport:'Sport mode'}
     },
     ru: {
-      loading:'ЗАГРУЖАЕМ МАШИНЫ', swipe:'← листай, чтобы увидеть больше →',
-      perDay:'в день', book:'Забронировать',
-      bookTitle:c=>'Бронь: '+c, bookSub:(p)=>'€'+p+'/день · Мы свяжемся с вами для подтверждения.',
-      from:'Получение', to:'Возврат', name:'Имя', phone:'Телефон / Telegram', note:'Комментарий (необязательно)',
+      loading:'Загружаем машины…', swipe:'Свайпай карточку, чтобы сменить машину',
+      day:'день', days:n=>{const m=n%10,h=n%100;if(m===1&&h!==11)return n+' день';if(m>=2&&m<=4&&(h<10||h>=20))return n+' дня';return n+' дней';}, perDay:'в день', book:'Забронировать',
+      bookSheetTitle:'Бронирование', from:'Получение', to:'Возврат',
+      total:'Итого', name:'Имя', phone:'Телефон / Telegram', note:'Комментарий (необязательно)',
       notePh:'Время получения, аэропорт…', confirm:'Отправить заявку', sending:'Отправляем…',
       dateErr:'Дата возврата должна быть позже даты получения.',
       formErr:'Укажите имя и телефон, чтобы продолжить.',
       sendErr:'Не удалось отправить. Попробуйте ещё раз.',
-      ok1:'Забронировано!', ok2:'Мы скоро свяжемся с вами',
+      ok1:'Заявка отправлена!', ok2:'Мы скоро свяжемся с вами',
       reqTitle:'Мои заявки', reqSub:'Заявки, отправленные с этого устройства.',
       reqEmpty:'Заявок пока нет.<br>Выберите машину и забронируйте.',
       clear:'Очистить локальную историю', clearAsk:'Очистить локальную историю?',
+      photos:'фото',
+      hintSwipe:'Свайпай карточку влево-вправо, чтобы листать машины',
+      hintTap:'Нажми на фото, чтобы посмотреть другие фото машины',
+      hintBook:'Нажми «Забронировать» внизу, выбери даты и отправь заявку',
       specs:{year:'Год',seats:'Мест',doors:'Дверей',trans:'Коробка',fuel:'Топливо',consumo:'Расход'},
       vals:{auto:'Автомат',manual:'Механика',petrol:'Бензин',diesel:'Дизель',hybrid:'Гибрид',electric:'Электро'},
       cls:{estate:'Универсал',muscle:'Спорткар',suv:'Внедорожник',compact:'Компакт',premium:'Премиум',economy:'Эконом',electric:'Электро',convertible:'Кабриолет'},
@@ -609,8 +641,8 @@ body{
     let code = '';
     try{ code = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || navigator.language || ''; }catch(e){}
     code = String(code).slice(0,2).toLowerCase();
-    if (code === 'ru' || code === 'uk' || code === 'be' || code === 'kk') return 'ru';
-    if (code === 'es' || code === 'ca') return 'es';
+    if (['ru','uk','be','kk'].includes(code)) return 'ru';
+    if (['es','ca'].includes(code)) return 'es';
     return 'en';
   }
   let lang = detectLang();
@@ -619,19 +651,44 @@ body{
   const trCls  = v => (T().cls[v]   || v);
   const trFeat = v => (T().feats[v] || v);
 
+  // ================= theme =================
+  const THEME_KEY = 'pas:theme';
+  function detectTheme(){
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+    try{ if (tg && tg.colorScheme === 'light') return 'light'; }catch(e){}
+    return 'dark';
+  }
+  let theme = detectTheme();
+  function applyTheme(){
+    document.documentElement.setAttribute('data-theme', theme);
+    const dk = theme === 'dark';
+    document.getElementById('iconMoon').style.display = dk ? '' : 'none';
+    document.getElementById('iconSun').style.display  = dk ? 'none' : '';
+    try{
+      tg && tg.setHeaderColor && tg.setHeaderColor(dk ? '#0E0E12' : '#F2F2F7');
+      tg && tg.setBackgroundColor && tg.setBackgroundColor(dk ? '#0E0E12' : '#F2F2F7');
+    }catch(e){}
+  }
+  document.getElementById('themeBtn').addEventListener('click', ()=>{
+    theme = theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(THEME_KEY, theme);
+    haptic('light');
+    applyTheme();
+  });
+
   // ================= data =================
   const FB = window.FIREBASE_CONFIG || null;
   const MY_BOOKINGS_KEY = 'pas:my-bookings';
 
   const DEMO_CARS = [
-    {id:'d1', name:'Audi A4 Avant', cls:'estate', priceperday:55, year:'2019', seats:5, doors:5, trans:'auto', fuel:'petrol', features:['ac','carplay','sensors'], photos:[]},
-    {id:'d2', name:'Mini Cooper', cls:'compact', priceperday:45, year:'2018', seats:4, doors:3, trans:'auto', fuel:'petrol', features:['ac','bluetooth'], photos:[]},
+    {id:'d1', name:'Audi A4 Avant', cls:'estate', priceperday:55, year:'2020', seats:5, doors:5, trans:'auto', fuel:'diesel', features:['ac','leather','navi'], photos:[]},
   ];
 
   let cars = [];
   let current = 0;
   let activeBookingCar = null;
-  const photoIdx = {};   // carId -> current photo index
+  const photoIdx = {};
 
   function fireBase(){
     return 'https://firestore.googleapis.com/v1/projects/' + FB.projectId + '/databases/(default)/documents';
@@ -702,7 +759,11 @@ body{
 
   // ================= helpers =================
   const $ = id => document.getElementById(id);
+  const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const todayStr = () => new Date().toISOString().slice(0,10);
+  const addDays = (dstr, n) => { const d = new Date(dstr); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+  const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
 
   // ================= render =================
   const deck = $('deck'), dotsEl = $('dots');
@@ -726,27 +787,26 @@ body{
     return rows.map(([k,v])=>`<div class="spec"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
   }
 
-  function segsHTML(car){
-    const ph = photosOf(car);
-    if (ph.length < 2) return '';
-    const i = photoIdx[car.id] || 0;
-    return `<div class="segs">${ph.map((_,j)=>`<div class="seg ${j<i?'done':''} ${j===i?'now':''}"><i></i></div>`).join('')}</div>`;
-  }
-
   function photoAreaHTML(car){
     const ph = photosOf(car);
     const i = photoIdx[car.id] || 0;
-    const imgs = ph.map((src,j)=>`<img src="${esc(src)}" class="${j===i?'on':''}" ${j<=i+1?'':'loading="lazy"'} alt="">`).join('');
+    const bg = ph.length ? `<img class="bgimg" src="${esc(ph[i])}" alt="">` : '';
+    const fgs = ph.map((src,j)=>`<img class="fgimg ${j===i?'on':''}" src="${esc(src)}" ${Math.abs(j-i)<=1?'':'loading="lazy"'} alt="">`).join('');
+    const segs = ph.length > 1
+      ? `<div class="segs">${ph.map((_,j)=>`<div class="seg ${j<i?'done':''} ${j===i?'now':''}"><i></i></div>`).join('')}</div>` : '';
+    const camHint = ph.length > 1
+      ? `<div class="cam-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="3" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="13.5" r="3.4" stroke="#fff" stroke-width="1.8"/><path d="M8.5 7l1.2-2.4h4.6L15.5 7" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg> ${i+1}/${ph.length}</div>` : '';
     return `
-      ${ph.length ? imgs : '<div class="ph-shimmer"></div>'}
+      ${bg}${fgs}
       <div class="scrim"></div><div class="scrim-top"></div>
-      ${segsHTML(car)}
+      ${segs}
       ${ph.length>1 ? '<div class="tz l" data-go="-1"></div><div class="tz r" data-go="1"></div>' : ''}
       <div class="chip-class">${esc(trCls(car.cls))}</div>
       <div class="title-block">
         <div class="nm">${esc(car.name)}</div>
         <div class="sub">${esc(car.year||'')}${car.year?' · ':''}Barcelona</div>
-      </div>`;
+      </div>
+      ${camHint}`;
   }
 
   function cardHTML(car){
@@ -772,18 +832,41 @@ body{
     });
     renderDots();
     updateCta();
+    updateArrows();
   }
 
   function renderDots(){
     dotsEl.innerHTML = cars.map((_,i)=>`<div class="dot ${i===current?'active':''}"></div>`).join('');
   }
 
+  function mainBtnText(){
+    const car = cars[current];
+    if (!car) return T().book;
+    return T().book + ' · €' + car.priceperday + '/' + T().day;
+  }
+
   function updateCta(){
     const car = cars[current];
     if (!car) return;
     $('ctaPrice').innerHTML = '<span>€</span>' + esc(car.priceperday);
-    $('ctaUnit').textContent = T().perDay;
-    $('mainBookBtn').textContent = T().book;
+    setTxt('ctaUnit', T().perDay);
+    setTxt('mainBookBtn', T().book);
+    if (inTG && tg.MainButton){
+      try{
+        tg.MainButton.setParams({
+          text: mainBtnText(),
+          color: '#E8A33D',
+          text_color: '#161005',
+          is_active: true,
+          is_visible: !sheetOpen,
+        });
+      }catch(e){}
+    }
+  }
+
+  function updateArrows(){
+    $('prevBtn').classList.toggle('off', current <= 0);
+    $('nextBtn').classList.toggle('off', current >= cars.length-1);
   }
 
   function positionCard(el, off, animate){
@@ -807,6 +890,7 @@ body{
     });
     renderDots();
     updateCta();
+    updateArrows();
   }
 
   function goTo(i){
@@ -815,10 +899,14 @@ body{
     if (i === current) return;
     current = i;
     haptic('light');
+    dismissHint();
     updatePositions();
   }
 
-  // ---- photo navigation (story style) ----
+  $('prevBtn').addEventListener('click', ()=>goTo(current-1));
+  $('nextBtn').addEventListener('click', ()=>goTo(current+1));
+
+  // ---- photo navigation: tap anywhere (left half = prev, right half = next) ----
   function attachPhotoNav(cardEl, car){
     const phEl = cardEl.querySelector('.ph');
     if (!phEl) return;
@@ -878,27 +966,72 @@ body{
 
   // ================= sheets =================
   const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), stampOverlay = $('stampOverlay');
-  const openSheet = s => { overlay.classList.add('show'); s.classList.add('show'); };
-  const closeSheets = () => { overlay.classList.remove('show'); bookingSheet.classList.remove('show'); requestsSheet.classList.remove('show'); };
+  let sheetOpen = false;
+  function openSheet(s){
+    sheetOpen = true;
+    overlay.classList.add('show'); s.classList.add('show');
+    if (inTG && tg.MainButton){ try{ tg.MainButton.hide(); }catch(e){} }
+  }
+  function closeSheets(){
+    sheetOpen = false;
+    overlay.classList.remove('show');
+    bookingSheet.classList.remove('show');
+    requestsSheet.classList.remove('show');
+    updateCta();
+  }
   overlay.addEventListener('click', closeSheets);
 
-  const todayStr = () => new Date().toISOString().slice(0,10);
-
-  $('mainBookBtn').addEventListener('click', ()=>{
+  // ---- booking ----
+  function openBooking(){
     if (!cars.length) return;
     activeBookingCar = cars[current];
-    $('bookCarName').textContent = T().bookTitle(activeBookingCar.name);
-    $('bookCarSub').textContent = T().bookSub(activeBookingCar.priceperday);
+    const ph = photosOf(activeBookingCar);
+    $('bookThumb').src = ph[0] || '';
+    setTxt('bookCarName', activeBookingCar.name);
+    setTxt('bookCarPrice', '€' + activeBookingCar.priceperday + ' / ' + T().day);
     const from = $('dateFrom'), to = $('dateTo');
-    from.min = todayStr(); to.min = todayStr();
+    from.min = todayStr();
     if (!from.value) from.value = todayStr();
+    to.min = addDays(from.value, 1);
+    if (!to.value || new Date(to.value) <= new Date(from.value)) to.value = addDays(from.value, 3);
     $('dateErr').classList.remove('show');
     $('formErr').classList.remove('show');
     let pre = '';
     try{ pre = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || ''; }catch(e){}
     if (pre && !$('nameInput').value) $('nameInput').value = pre;
+    updateTotal();
     haptic('medium');
     openSheet(bookingSheet);
+  }
+  $('mainBookBtn').addEventListener('click', openBooking);
+  if (inTG && tg.MainButton){
+    try{ tg.MainButton.onClick(()=>{ if (!sheetOpen) openBooking(); }); }catch(e){}
+  }
+
+  function updateTotal(){
+    const from = $('dateFrom').value, to = $('dateTo').value;
+    const tv = $('totalValue');
+    setTxt('totalLabel', T().total);
+    document.querySelectorAll('.qd').forEach(b=>{
+      const d = parseInt(b.dataset.d,10);
+      b.textContent = T().days(d);
+      b.classList.toggle('active', !!from && !!to && daysBetween(from,to) === d);
+    });
+    if (!from || !to || !activeBookingCar){ tv.textContent = '—'; return; }
+    const n = daysBetween(from, to);
+    if (n <= 0){ tv.textContent = '—'; return; }
+    tv.innerHTML = esc(T().days(n)) + ' × €' + esc(activeBookingCar.priceperday) + ' = <span>€' + esc(n * activeBookingCar.priceperday) + '</span>';
+  }
+  $('dateFrom').addEventListener('change', ()=>{ $('dateTo').min = addDays($('dateFrom').value||todayStr(),1); updateTotal(); });
+  $('dateTo').addEventListener('change', updateTotal);
+  $('quickDays').addEventListener('click', e=>{
+    const b = e.target.closest('.qd');
+    if (!b) return;
+    const from = $('dateFrom').value || todayStr();
+    $('dateFrom').value = from;
+    $('dateTo').value = addDays(from, parseInt(b.dataset.d,10));
+    haptic('light');
+    updateTotal();
   });
 
   $('confirmBtn').addEventListener('click', async ()=>{
@@ -906,7 +1039,8 @@ body{
     const name = $('nameInput').value.trim(), phone = $('phoneInput').value.trim(), note = $('noteInput').value.trim();
     const dateErr = $('dateErr'), formErr = $('formErr');
     dateErr.classList.remove('show'); formErr.classList.remove('show');
-    formErr.textContent = T().formErr;
+    setTxt('dateErr', T().dateErr);
+    setTxt('formErr', T().formErr);
 
     if (!from || !to || new Date(to) <= new Date(from)){ dateErr.classList.add('show'); return; }
     if (!name || !phone){ formErr.classList.add('show'); return; }
@@ -920,11 +1054,14 @@ body{
       if (u){ tgUser = u.username || null; tgUserId = u.id || null; }
     }catch(e){}
 
+    const n = daysBetween(from, to);
     const booking = {
       bookingId: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
       carId: activeBookingCar.id,
       carName: activeBookingCar.name,
       priceperday: activeBookingCar.priceperday,
+      days: n,
+      total: n * activeBookingCar.priceperday,
       from, to, name, phone, note,
       createdAt: new Date().toISOString(),
       tgUser, tgUserId,
@@ -941,13 +1078,14 @@ body{
       $('noteInput').value = '';
     }catch(e){
       notifyH('error');
-      formErr.textContent = T().sendErr;
+      setTxt('formErr', T().sendErr);
       formErr.classList.add('show');
     }finally{
       btn.disabled = false; btn.textContent = T().confirm;
     }
   });
 
+  // ---- requests ----
   $('reqBtn').addEventListener('click', ()=>{
     haptic('light');
     renderRequests();
@@ -966,7 +1104,7 @@ body{
           <div class="when">${new Date(b.createdAt).toLocaleDateString(locale,{day:'2-digit',month:'short'})}</div>
         </div>
         <div class="meta">
-          ${esc(b.from)} → ${esc(b.to)} · €${esc(b.priceperday)}<br>
+          ${esc(b.from)} → ${esc(b.to)}${b.total ? ' · €'+esc(b.total) : ' · €'+esc(b.priceperday)+'/'+esc(T().day)}<br>
           ${esc(b.name)} · ${esc(b.phone)}
           ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
         </div>
@@ -981,32 +1119,61 @@ body{
     if (confirm(T().clearAsk)) doClear();
   });
 
+  // ================= onboarding hint =================
+  const HINT_KEY = 'pas:hint-v2';
+  function maybeShowHint(){
+    try{ if (localStorage.getItem(HINT_KEY)) return; }catch(e){}
+    $('hintOverlay').classList.add('show');
+  }
+  function dismissHint(){
+    const h = $('hintOverlay');
+    if (!h.classList.contains('show')) return;
+    h.classList.remove('show');
+    try{ localStorage.setItem(HINT_KEY,'1'); }catch(e){}
+  }
+  $('hintOk').addEventListener('click', dismissHint);
+  $('hintOverlay').addEventListener('click', e=>{ if (e.target === e.currentTarget) dismissHint(); });
+
   // ================= language =================
   function applyLang(){
     document.documentElement.lang = lang;
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
-    $('loadingText').textContent = T().loading;
-    $('swipeHint').textContent = T().swipe;
-    $('lblFrom').textContent = T().from;
-    $('lblTo').textContent = T().to;
-    $('lblName').textContent = T().name;
-    $('lblPhone').textContent = T().phone;
-    $('lblNote').textContent = T().note;
-    $('noteInput').placeholder = T().notePh;
-    $('confirmBtn').textContent = T().confirm;
-    $('reqTitle').textContent = T().reqTitle;
-    $('reqSub').textContent = T().reqSub;
-    $('clearReq').textContent = T().clear;
-    $('stampT1').textContent = T().ok1;
-    $('stampT2').textContent = T().ok2;
+    setTxt('loadingText', T().loading);
+    setTxt('swipeHint', T().swipe);
+    setTxt('bookTitle', T().bookSheetTitle);
+    setTxt('lblFrom', T().from);
+    setTxt('lblTo', T().to);
+    setTxt('lblName', T().name);
+    setTxt('lblPhone', T().phone);
+    setTxt('lblNote', T().note);
+    const noteEl = $('noteInput'); if (noteEl) noteEl.placeholder = T().notePh;
+    setTxt('confirmBtn', T().confirm);
+    setTxt('reqTitle', T().reqTitle);
+    setTxt('reqSub', T().reqSub);
+    setTxt('clearReq', T().clear);
+    setTxt('stampT1', T().ok1);
+    setTxt('stampT2', T().ok2);
+    setTxt('dateErr', T().dateErr);
+    setTxt('formErr', T().formErr);
+    setTxt('hintSwipe', T().hintSwipe);
+    setTxt('hintTap', T().hintTap);
+    setTxt('hintBook', T().hintBook);
+    if (activeBookingCar){
+      setTxt('bookCarPrice', '€' + activeBookingCar.priceperday + ' / ' + T().day);
+      updateTotal();
+    } else {
+      setTxt('totalLabel', T().total);
+      document.querySelectorAll('.qd').forEach(b=>{ b.textContent = T().days(parseInt(b.dataset.d,10)); });
+    }
     if (cars.length) renderDeck();
+    if (requestsSheet.classList.contains('show')) renderRequests();
   }
 
   $('langSwitch').addEventListener('click', e=>{
     const b = e.target.closest('.lang-btn');
     if (!b || b.dataset.lang === lang) return;
     lang = b.dataset.lang;
-    localStorage.setItem(LANG_KEY, lang);
+    try{ localStorage.setItem(LANG_KEY, lang); }catch(e2){}
     haptic('light');
     applyLang();
   });
@@ -1018,10 +1185,12 @@ body{
   });
 
   // ================= init =================
+  applyTheme();
   applyLang();
   (async function init(){
     await loadFleet();
     renderDeck();
+    maybeShowHint();
   })();
 
 })();

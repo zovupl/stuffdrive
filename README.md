@@ -1,4 +1,4 @@
-# Stuffdrive — Pablo Auto Spain
+# StuffDrive
 
 Telegram Mini App для аренды машин в Барселоне. Работает внутри Telegram через бота [@stuffdrivebot](https://t.me/stuffdrivebot) в группе [StuffDive](https://t.me/StuffDive).
 
