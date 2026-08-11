@@ -102,6 +102,53 @@ body.tg #app{height:var(--tg-viewport-stable-height,100dvh);}
 }
 .icon-btn:active{transform:scale(0.9);}
 
+.my-badge{
+  display:flex;align-items:center;gap:5px;
+  height:34px;padding:0 11px;border-radius:50px;
+  background:rgba(232,163,61,0.14);
+  border:1px solid rgba(232,163,61,0.45);
+  color:var(--amber);
+  font-family:inherit;font-size:12.5px;font-weight:800;
+  cursor:pointer;transition:transform .15s;flex-shrink:0;
+}
+.my-badge:active{transform:scale(0.92);}
+
+/* admin panel */
+.atabs{display:flex;gap:7px;margin-bottom:14px;}
+.atab{
+  flex:1;border:1px solid var(--line-2);background:var(--card);
+  color:var(--text-dim);font-family:inherit;font-size:13px;font-weight:700;
+  border-radius:50px;padding:9px 0;cursor:pointer;transition:all .15s;
+}
+.atab.active{background:var(--amber);border-color:var(--amber);color:var(--amber-dark);}
+.acar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:1px solid var(--line);background:var(--card);
+  border-radius:14px;padding:12px 13px;margin-bottom:9px;
+}
+.acar.inactive{opacity:0.55;}
+.acar .an{font-size:14px;font-weight:800;}
+.acar .as{font-size:11.5px;font-weight:600;color:var(--text-dim);margin-top:2px;}
+.acar-r{display:flex;gap:6px;flex-shrink:0;}
+.abtn{
+  border:1px solid var(--line-2);background:var(--card-2);
+  color:var(--text);font-family:inherit;font-size:12px;font-weight:700;
+  border-radius:10px;padding:8px 11px;cursor:pointer;transition:transform .12s;
+}
+.abtn:active{transform:scale(0.93);}
+.abtn.danger{color:var(--red);border-color:rgba(240,93,69,0.4);}
+.abtn.good{color:var(--green);border-color:rgba(61,214,140,0.4);}
+.aprice-row{display:flex;gap:7px;margin:-3px 0 9px;}
+.aprice-row input{
+  flex:1;border:1.5px solid var(--line-2);border-radius:10px;
+  padding:9px 12px;font-family:inherit;font-size:14px;
+  color:var(--text);background:var(--card);outline:none;
+}
+.aprice-row input:focus{border-color:var(--amber);}
+.astatus{font-size:11px;font-weight:700;padding:3px 8px;border-radius:50px;}
+.astatus.new{color:var(--amber);background:rgba(232,163,61,0.13);}
+.aloading{text-align:center;padding:26px;color:var(--text-faint);font-size:13px;}
+
 /* ============ DECK ============ */
 .deck-wrap{flex:1;position:relative;padding:2px 14px 0;min-height:0;}
 .deck{position:relative;width:100%;height:100%;}
@@ -446,9 +493,13 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
         <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 12.4A8 8 0 1 1 11.6 4a6.5 6.5 0 0 0 8.4 8.4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
         <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </div>
-      <div class="icon-btn" id="reqBtn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="8.2" stroke="currentColor" stroke-width="1.8"/></svg>
+      <div class="icon-btn" id="adminBtn" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V19.6a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H2.4a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08a1.7 1.7 0 0 0 1.03-1.56V2.4a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.56 1.03h.17a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03z" stroke="currentColor" stroke-width="1.5"/></svg>
       </div>
+      <button class="my-badge" id="myBadge" style="display:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="myBadgeN">1</span>
+      </button>
     </div>
   </div>
 
@@ -526,6 +577,18 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       <div class="sub" id="reqSub"></div>
       <div id="reqList"></div>
       <div class="clear-link" id="clearReq"></div>
+    </div>
+
+    <!-- admin sheet -->
+    <div class="sheet" id="adminSheet">
+      <div class="sheet-handle"></div>
+      <h3>Админ-панель</h3>
+      <div class="atabs">
+        <button class="atab active" id="tabCars">Машины</button>
+        <button class="atab" id="tabBookings">Заявки</button>
+      </div>
+      <div id="adminCars"></div>
+      <div id="adminBookings" style="display:none"></div>
     </div>
 
     <div id="stampOverlay">
@@ -686,8 +749,10 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   ];
 
   let cars = [];
+  let allCars = [];   // включая скрытые — для админ-панели
   let current = 0;
   let activeBookingCar = null;
+  let isAdmin = false;
   const photoIdx = {};
 
   function fireBase(){
@@ -725,14 +790,15 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
         const res = await fetch(fireBase() + '/cars?pageSize=300&key=' + FB.apiKey);
         const data = await res.json();
         if (data.documents && data.documents.length){
-          const list = data.documents.map(docToObj)
-            .filter(c => c.active !== false)
+          allCars = data.documents.map(docToObj)
             .sort((a,b) => (a.order||999)-(b.order||999) || String(a.name).localeCompare(String(b.name)));
+          const list = allCars.filter(c => c.active !== false);
           if (list.length){ cars = list; return; }
         }
       }catch(e){}
     }
     cars = DEMO_CARS;
+    allCars = DEMO_CARS;
   }
 
   async function saveBooking(b){
@@ -965,7 +1031,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   }
 
   // ================= sheets =================
-  const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), stampOverlay = $('stampOverlay');
+  const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), adminSheet = $('adminSheet'), stampOverlay = $('stampOverlay');
   let sheetOpen = false;
   function openSheet(s){
     sheetOpen = true;
@@ -977,6 +1043,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     overlay.classList.remove('show');
     bookingSheet.classList.remove('show');
     requestsSheet.classList.remove('show');
+    adminSheet.classList.remove('show');
     updateCta();
   }
   overlay.addEventListener('click', closeSheets);
@@ -1076,6 +1143,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       stampOverlay.classList.add('show');
       setTimeout(()=>stampOverlay.classList.remove('show'), 1900);
       $('noteInput').value = '';
+      updateMyBadge();
     }catch(e){
       notifyH('error');
       setTxt('formErr', T().sendErr);
@@ -1085,12 +1153,150 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     }
   });
 
-  // ---- requests ----
-  $('reqBtn').addEventListener('click', ()=>{
+  // ---- my reservations badge (виден только когда есть брони) ----
+  function updateMyBadge(){
+    const n = loadMy().length;
+    const b = $('myBadge');
+    if (!b) return;
+    b.style.display = n > 0 ? 'flex' : 'none';
+    setTxt('myBadgeN', String(n));
+  }
+  $('myBadge').addEventListener('click', ()=>{
     haptic('light');
     renderRequests();
     openSheet(requestsSheet);
   });
+
+  // ================= admin panel =================
+  async function adminApi(op, extra){
+    if (!window.NOTIFY_WEBHOOK) return null;
+    try{
+      const res = await fetch(window.NOTIFY_WEBHOOK, {
+        method:'POST',
+        body: JSON.stringify(Object.assign({type:'admin', initData:(tg && tg.initData) || '', op}, extra || {})),
+      });
+      return await res.json();
+    }catch(e){ return null; }
+  }
+
+  async function initAdmin(){
+    if (!inTG) return;
+    const r = await adminApi('whoami');
+    if (r && r.ok && r.admin){
+      isAdmin = true;
+      $('adminBtn').style.display = 'flex';
+    }
+  }
+
+  $('adminBtn').addEventListener('click', ()=>{
+    haptic('light');
+    renderAdminCars();
+    openSheet(adminSheet);
+  });
+
+  $('tabCars').addEventListener('click', ()=>{
+    $('tabCars').classList.add('active'); $('tabBookings').classList.remove('active');
+    $('adminCars').style.display = ''; $('adminBookings').style.display = 'none';
+    renderAdminCars();
+  });
+  $('tabBookings').addEventListener('click', ()=>{
+    $('tabBookings').classList.add('active'); $('tabCars').classList.remove('active');
+    $('adminBookings').style.display = ''; $('adminCars').style.display = 'none';
+    renderAdminBookings();
+  });
+
+  function renderAdminCars(){
+    const box = $('adminCars');
+    if (!allCars.length){ box.innerHTML = '<div class="aloading">Нет машин</div>'; return; }
+    box.innerHTML = allCars.map(c=>{
+      const on = c.active !== false;
+      return `
+      <div class="acar ${on?'':'inactive'}" data-id="${esc(c.id)}">
+        <div>
+          <div class="an">${esc(c.name)}</div>
+          <div class="as">${on?'✅ в каталоге':'🚫 скрыта'} · €${esc(c.priceperday)}/день</div>
+        </div>
+        <div class="acar-r">
+          <button class="abtn" data-act="price">€</button>
+          <button class="abtn ${on?'danger':'good'}" data-act="toggle">${on?'Скрыть':'Показать'}</button>
+        </div>
+      </div>
+      <div class="aprice-row" data-price-for="${esc(c.id)}" style="display:none">
+        <input type="number" min="1" max="9999" value="${esc(c.priceperday)}" placeholder="€/день">
+        <button class="abtn good" data-act="save-price">OK</button>
+      </div>`;
+    }).join('');
+  }
+
+  $('adminCars').addEventListener('click', async e=>{
+    const btn = e.target.closest('.abtn');
+    if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === 'toggle'){
+      const row = btn.closest('.acar');
+      const id = row.dataset.id;
+      const car = allCars.find(c=>c.id===id);
+      if (!car) return;
+      const newActive = car.active === false;
+      btn.disabled = true; btn.textContent = '…';
+      const r = await adminApi('setActive', {carId:id, value:newActive});
+      btn.disabled = false;
+      if (r && r.ok){
+        car.active = newActive;
+        haptic('medium');
+        cars = allCars.filter(c=>c.active!==false);
+        if (current >= cars.length) current = Math.max(0, cars.length-1);
+        renderDeck();
+        renderAdminCars();
+      } else {
+        btn.textContent = 'Ошибка';
+        notifyH('error');
+      }
+    }
+    if (act === 'price'){
+      const row = btn.closest('.acar');
+      const pr = document.querySelector(`[data-price-for="${row.dataset.id}"]`);
+      if (pr) pr.style.display = pr.style.display === 'none' ? 'flex' : 'none';
+    }
+    if (act === 'save-price'){
+      const pr = btn.closest('.aprice-row');
+      const id = pr.dataset.priceFor;
+      const val = parseInt(pr.querySelector('input').value, 10);
+      if (!val || val < 1){ notifyH('error'); return; }
+      btn.disabled = true; btn.textContent = '…';
+      const r = await adminApi('setPrice', {carId:id, value:val});
+      btn.disabled = false; btn.textContent = 'OK';
+      if (r && r.ok){
+        const car = allCars.find(c=>c.id===id);
+        if (car) car.priceperday = val;
+        haptic('medium');
+        pr.style.display = 'none';
+        cars = allCars.filter(c=>c.active!==false);
+        renderDeck();
+        renderAdminCars();
+      } else notifyH('error');
+    }
+  });
+
+  async function renderAdminBookings(){
+    const box = $('adminBookings');
+    box.innerHTML = '<div class="aloading">Загружаем заявки…</div>';
+    const r = await adminApi('bookings');
+    if (!r || !r.ok){ box.innerHTML = '<div class="aloading">Не удалось загрузить</div>'; return; }
+    if (!r.bookings.length){ box.innerHTML = '<div class="aloading">Заявок пока нет</div>'; return; }
+    box.innerHTML = r.bookings.map(b=>`
+      <div class="req-item">
+        <div class="top">
+          <div class="car">${esc(b.carName)}</div>
+          <div class="when">${b.createdAt ? new Date(b.createdAt).toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}) : ''} <span class="astatus new">${esc(b.status||'new')}</span></div>
+        </div>
+        <div class="meta">
+          ${esc(b.from)} → ${esc(b.to)}${b.total?' · €'+esc(b.total):''}<br>
+          ${esc(b.name)} · ${esc(b.phone)}${b.tgUser?' · @'+esc(b.tgUser):''}
+          ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
+        </div>
+      </div>`).join('');
+  }
 
   function renderRequests(){
     const list = $('reqList');
@@ -1112,7 +1318,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   }
 
   $('clearReq').addEventListener('click', ()=>{
-    const doClear = () => { clearMy(); renderRequests(); };
+    const doClear = () => { clearMy(); renderRequests(); updateMyBadge(); };
     if (tg && tg.showConfirm){
       try{ tg.showConfirm(T().clearAsk, ok => { if (ok) doClear(); }); return; }catch(e){}
     }
@@ -1187,10 +1393,12 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   // ================= init =================
   applyTheme();
   applyLang();
+  updateMyBadge();
   (async function init(){
     await loadFleet();
     renderDeck();
     maybeShowHint();
+    initAdmin();
   })();
 
 })();
