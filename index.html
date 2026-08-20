@@ -227,6 +227,13 @@ body.tg #app{height:var(--tg-viewport-stable-height,100dvh);}
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   padding:5px 10px;border-radius:50px;
 }
+.chip-disc{
+  position:absolute;top:20px;left:12px;z-index:4;
+  font-size:10.5px;font-weight:800;letter-spacing:0.04em;
+  color:#fff;
+  background:rgba(240,93,69,0.92);
+  padding:5px 9px;border-radius:50px;
+}
 .ph .title-block{position:absolute;left:14px;right:14px;bottom:10px;z-index:4;pointer-events:none;}
 .ph .title-block .nm{
   font-size:22px;font-weight:800;letter-spacing:-0.01em;
@@ -292,15 +299,10 @@ body.tg #app{height:var(--tg-viewport-stable-height,100dvh);}
   background:var(--amber);margin-right:6px;vertical-align:1.5px;
 }
 
-/* dots + hint */
-.dots{display:flex;justify-content:center;gap:5px;padding:9px 0 2px;flex-shrink:0;}
+/* dots */
+.dots{display:flex;justify-content:center;gap:5px;padding:9px 0 4px;flex-shrink:0;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--line-2);transition:all .25s;}
 .dot.active{width:18px;border-radius:3px;background:var(--amber);}
-.swipe-hint{
-  text-align:center;font-size:10.5px;font-weight:600;
-  color:var(--text-faint);
-  padding:3px 0 2px;flex-shrink:0;
-}
 
 /* ============ CTA (browser fallback) ============ */
 .cta-bar{
@@ -311,6 +313,7 @@ body:not(.tg) .cta-bar{display:flex;}
 .price-box{display:flex;flex-direction:column;flex-shrink:0;}
 .price-box .p{font-size:21px;font-weight:800;line-height:1.05;}
 .price-box .p span{color:var(--amber);}
+.price-box .p s{font-size:13px;font-weight:700;color:var(--text-faint);margin-left:4px;}
 .price-box .u{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-faint);}
 .book-btn{
   flex:1;border:none;border-radius:14px;
@@ -322,8 +325,7 @@ body:not(.tg) .cta-bar{display:flex;}
   transition:transform .15s;
 }
 .book-btn:active{transform:scale(0.97);}
-body.tg .dots{padding-bottom:8px;}
-body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
+body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
 
 /* ============ SHEETS ============ */
 .overlay{
@@ -357,6 +359,8 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
 .book-car-row .bi{min-width:0;}
 .book-car-row .bn{font-size:14.5px;font-weight:800;}
 .book-car-row .bp{font-size:12px;font-weight:600;color:var(--text-dim);margin-top:1px;}
+.book-car-row .bp s{color:var(--text-faint);}
+.book-car-row .bp b{color:var(--red);}
 
 .field{margin-bottom:12px;}
 .field label{
@@ -480,8 +484,8 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
 
   <div class="header">
     <div class="brand">
-      <span class="eyebrow">Barcelona</span>
-      <h1>STUFFDRIVE</h1>
+      <span class="eyebrow">StuffDrive</span>
+      <h1>BARCELONA</h1>
     </div>
     <div class="header-right">
       <div class="lang-switch" id="langSwitch">
@@ -603,7 +607,6 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   </div>
 
   <div class="dots" id="dots"></div>
-  <div class="swipe-hint" id="swipeHint"></div>
 
   <div class="cta-bar">
     <div class="price-box">
@@ -646,10 +649,11 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       hintSwipe:'Desliza la tarjeta a la izquierda o derecha para ver otros coches',
       hintTap:'Toca la foto para ver más fotos del coche',
       hintBook:'Pulsa «Reservar» abajo, elige las fechas y envía la solicitud',
-      specs:{year:'Año',seats:'Plazas',doors:'Puertas',trans:'Cambio',fuel:'Combustible',consumo:'Consumo'},
+      hp:'CV', sec:'s',
+      specs:{year:'Año',seats:'Plazas',doors:'Puertas',trans:'Cambio',fuel:'Combustible',consumo:'Consumo',power:'Potencia',accel:'0–100 km/h'},
       vals:{auto:'Automático',manual:'Manual',petrol:'Gasolina',diesel:'Diésel',hybrid:'Híbrido',electric:'Eléctrico'},
       cls:{estate:'Familiar',muscle:'Deportivo',suv:'SUV',compact:'Compacto',premium:'Premium',economy:'Económico',electric:'Eléctrico',convertible:'Cabrio'},
-      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Cuero',panorama:'Techo panorámico',camera:'Cámara trasera',sensors:'Sensores',cruise:'Control crucero',heated:'Asientos calef.',keyless:'Keyless',led:'Faros LED',awd:'4×4','7seats':'7 plazas',navi:'Navegador',usb:'USB',convertible:'Descapotable',sport:'Modo Sport'}
+      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Cuero',panorama:'Techo panorámico',camera:'Cámara trasera',sensors:'Sensores',cruise:'Control crucero',heated:'Asientos calef.',keyless:'Keyless',led:'Faros LED',awd:'4×4','7seats':'7 plazas',navi:'Navegador',usb:'USB',convertible:'Descapotable',sport:'Modo Sport',massage:'Asientos con masaje',v8:'Motor V8'}
     },
     en: {
       loading:'Loading cars…', swipe:'Swipe the card to switch cars',
@@ -668,10 +672,11 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       hintSwipe:'Swipe the card left or right to browse cars',
       hintTap:'Tap the photo to see more pictures of the car',
       hintBook:'Press “Book” below, pick your dates and send the request',
-      specs:{year:'Year',seats:'Seats',doors:'Doors',trans:'Gearbox',fuel:'Fuel',consumo:'Consumption'},
+      hp:'hp', sec:'s',
+      specs:{year:'Year',seats:'Seats',doors:'Doors',trans:'Gearbox',fuel:'Fuel',consumo:'Consumption',power:'Power',accel:'0–100 km/h'},
       vals:{auto:'Automatic',manual:'Manual',petrol:'Petrol',diesel:'Diesel',hybrid:'Hybrid',electric:'Electric'},
       cls:{estate:'Estate',muscle:'Muscle car',suv:'SUV',compact:'Compact',premium:'Premium',economy:'Economy',electric:'Electric',convertible:'Convertible'},
-      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Leather',panorama:'Panoramic roof',camera:'Rear camera',sensors:'Parking sensors',cruise:'Cruise control',heated:'Heated seats',keyless:'Keyless',led:'LED lights',awd:'AWD','7seats':'7 seats',navi:'Navigation',usb:'USB',convertible:'Convertible',sport:'Sport mode'}
+      feats:{ac:'A/C',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Leather',panorama:'Panoramic roof',camera:'Rear camera',sensors:'Parking sensors',cruise:'Cruise control',heated:'Heated seats',keyless:'Keyless',led:'LED lights',awd:'AWD','7seats':'7 seats',navi:'Navigation',usb:'USB',convertible:'Convertible',sport:'Sport mode',massage:'Massage seats',v8:'V8 engine'}
     },
     ru: {
       loading:'Загружаем машины…', swipe:'Свайпай карточку, чтобы сменить машину',
@@ -690,10 +695,11 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       hintSwipe:'Свайпай карточку влево-вправо, чтобы листать машины',
       hintTap:'Нажми на фото, чтобы посмотреть другие фото машины',
       hintBook:'Нажми «Забронировать» внизу, выбери даты и отправь заявку',
-      specs:{year:'Год',seats:'Мест',doors:'Дверей',trans:'Коробка',fuel:'Топливо',consumo:'Расход'},
+      hp:'л.с.', sec:'с',
+      specs:{year:'Год',seats:'Мест',doors:'Дверей',trans:'Коробка',fuel:'Топливо',consumo:'Расход',power:'Мощность',accel:'0–100 км/ч'},
       vals:{auto:'Автомат',manual:'Механика',petrol:'Бензин',diesel:'Дизель',hybrid:'Гибрид',electric:'Электро'},
       cls:{estate:'Универсал',muscle:'Спорткар',suv:'Внедорожник',compact:'Компакт',premium:'Премиум',economy:'Эконом',electric:'Электро',convertible:'Кабриолет'},
-      feats:{ac:'Кондиционер',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Кожа',panorama:'Панорамная крыша',camera:'Камера заднего вида',sensors:'Парктроники',cruise:'Круиз-контроль',heated:'Подогрев сидений',keyless:'Keyless',led:'LED-фары',awd:'Полный привод','7seats':'7 мест',navi:'Навигация',usb:'USB',convertible:'Кабриолет',sport:'Спорт-режим'}
+      feats:{ac:'Кондиционер',bluetooth:'Bluetooth',carplay:'CarPlay',leather:'Кожа',panorama:'Панорамная крыша',camera:'Камера заднего вида',sensors:'Парктроники',cruise:'Круиз-контроль',heated:'Подогрев сидений',keyless:'Keyless',led:'LED-фары',awd:'Полный привод','7seats':'7 мест',navi:'Навигация',usb:'USB',convertible:'Кабриолет',sport:'Спорт-режим',massage:'Массаж сидений',v8:'Мотор V8'}
     }
   };
 
@@ -840,11 +846,19 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     return [];
   }
 
+  // скидка в %: есть, если обычная цена (baseprice) выше текущей
+  function discountPct(car){
+    const b = Number(car && car.baseprice || 0), p = Number(car && car.priceperday || 0);
+    return (b > p && p > 0) ? Math.round((1 - p / b) * 100) : 0;
+  }
+
   function specsHTML(car){
     const S = T().specs;
     const rows = [
       [S.year, car.year],
       [S.seats, car.seats],
+      [S.power, car.power ? car.power + ' ' + T().hp : null],
+      [S.accel, car.accel ? car.accel + ' ' + T().sec : null],
       [S.doors, car.doors],
       [S.trans, car.trans ? trVal(car.trans) : null],
       [S.fuel, car.fuel ? trVal(car.fuel) : null],
@@ -868,6 +882,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
       ${segs}
       ${ph.length>1 ? '<div class="tz l" data-go="-1"></div><div class="tz r" data-go="1"></div>' : ''}
       <div class="chip-class">${esc(trCls(car.cls))}</div>
+      ${discountPct(car) ? `<div class="chip-disc">−${discountPct(car)}%</div>` : ''}
       <div class="title-block">
         <div class="nm">${esc(car.name)}</div>
         <div class="sub">${esc(car.year||'')}${car.year?' · ':''}Barcelona</div>
@@ -908,14 +923,16 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   function mainBtnText(){
     const car = cars[current];
     if (!car) return T().book;
-    return T().book + ' · €' + car.priceperday + '/' + T().day;
+    const d = discountPct(car);
+    return T().book + ' · €' + car.priceperday + '/' + T().day + (d ? ' (−' + d + '%)' : '');
   }
 
   function updateCta(){
     const car = cars[current];
     if (!car) return;
-    $('ctaPrice').innerHTML = '<span>€</span>' + esc(car.priceperday);
-    setTxt('ctaUnit', T().perDay);
+    const d = discountPct(car);
+    $('ctaPrice').innerHTML = '<span>€</span>' + esc(car.priceperday) + (d ? '<s>€' + esc(car.baseprice) + '</s>' : '');
+    setTxt('ctaUnit', T().perDay + (d ? ' · −' + d + '%' : ''));
     setTxt('mainBookBtn', T().book);
     if (inTG && tg.MainButton){
       try{
@@ -1055,7 +1072,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     const ph = photosOf(activeBookingCar);
     $('bookThumb').src = ph[0] || '';
     setTxt('bookCarName', activeBookingCar.name);
-    setTxt('bookCarPrice', '€' + activeBookingCar.priceperday + ' / ' + T().day);
+    setBookPrice();
     const from = $('dateFrom'), to = $('dateTo');
     from.min = todayStr();
     if (!from.value) from.value = todayStr();
@@ -1073,6 +1090,13 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
   $('mainBookBtn').addEventListener('click', openBooking);
   if (inTG && tg.MainButton){
     try{ tg.MainButton.onClick(()=>{ if (!sheetOpen) openBooking(); }); }catch(e){}
+  }
+
+  function setBookPrice(){
+    if (!activeBookingCar) return;
+    const d = discountPct(activeBookingCar);
+    $('bookCarPrice').innerHTML = '€' + esc(activeBookingCar.priceperday) + ' / ' + esc(T().day)
+      + (d ? ' · <s>€' + esc(activeBookingCar.baseprice) + '</s> <b>−' + d + '%</b>' : '');
   }
 
   function updateTotal(){
@@ -1210,11 +1234,12 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     if (!allCars.length){ box.innerHTML = '<div class="aloading">Нет машин</div>'; return; }
     box.innerHTML = allCars.map(c=>{
       const on = c.active !== false;
+      const d = discountPct(c);
       return `
       <div class="acar ${on?'':'inactive'}" data-id="${esc(c.id)}">
         <div>
           <div class="an">${esc(c.name)}</div>
-          <div class="as">${on?'✅ в каталоге':'🚫 скрыта'} · €${esc(c.priceperday)}/день</div>
+          <div class="as">${on?'✅ в каталоге':'🚫 скрыта'} · €${esc(c.priceperday)}/день${d?' (обычная €'+esc(c.baseprice)+', −'+d+'%)':''}</div>
         </div>
         <div class="acar-r">
           <button class="abtn" data-act="price">€</button>
@@ -1222,7 +1247,8 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
         </div>
       </div>
       <div class="aprice-row" data-price-for="${esc(c.id)}" style="display:none">
-        <input type="number" min="1" max="9999" value="${esc(c.priceperday)}" placeholder="€/день">
+        <input type="number" min="1" max="9999" value="${esc(c.priceperday)}" placeholder="€/день" data-f="price">
+        <input type="number" min="0" max="9999" value="${c.baseprice?esc(c.baseprice):''}" placeholder="обычная €" data-f="base">
         <button class="abtn good" data-act="save-price">OK</button>
       </div>`;
     }).join('');
@@ -1261,14 +1287,16 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     if (act === 'save-price'){
       const pr = btn.closest('.aprice-row');
       const id = pr.dataset.priceFor;
-      const val = parseInt(pr.querySelector('input').value, 10);
+      const val = parseInt(pr.querySelector('input[data-f="price"]').value, 10);
+      const base = parseInt(pr.querySelector('input[data-f="base"]').value, 10) || 0;
       if (!val || val < 1){ notifyH('error'); return; }
       btn.disabled = true; btn.textContent = '…';
       const r = await adminApi('setPrice', {carId:id, value:val});
+      const r2 = await adminApi('setBase', {carId:id, value:base});
       btn.disabled = false; btn.textContent = 'OK';
-      if (r && r.ok){
+      if (r && r.ok && r2 && r2.ok){
         const car = allCars.find(c=>c.id===id);
-        if (car) car.priceperday = val;
+        if (car){ car.priceperday = val; if (base > 0) car.baseprice = base; else delete car.baseprice; }
         haptic('medium');
         pr.style.display = 'none';
         cars = allCars.filter(c=>c.active!==false);
@@ -1345,7 +1373,6 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     document.documentElement.lang = lang;
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
     setTxt('loadingText', T().loading);
-    setTxt('swipeHint', T().swipe);
     setTxt('bookTitle', T().bookSheetTitle);
     setTxt('lblFrom', T().from);
     setTxt('lblTo', T().to);
@@ -1365,7 +1392,7 @@ body.tg .swipe-hint{padding-bottom:calc(8px + var(--safe-bottom));}
     setTxt('hintTap', T().hintTap);
     setTxt('hintBook', T().hintBook);
     if (activeBookingCar){
-      setTxt('bookCarPrice', '€' + activeBookingCar.priceperday + ' / ' + T().day);
+      setBookPrice();
       updateTotal();
     } else {
       setTxt('totalLabel', T().total);
