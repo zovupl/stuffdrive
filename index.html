@@ -342,10 +342,11 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   border-radius:22px 22px 0 0;
   padding:8px 18px calc(18px + var(--safe-bottom));
   transform:translateY(103%);
-  transition:transform .34s cubic-bezier(.22,.9,.24,1);
+  visibility:hidden;
+  transition:transform .34s cubic-bezier(.22,.9,.24,1), visibility 0s linear .34s;
   max-height:92%;overflow-y:auto;color:var(--text);
 }
-.sheet.show{transform:translateY(0);}
+.sheet.show{transform:translateY(0);visibility:visible;transition:transform .34s cubic-bezier(.22,.9,.24,1);}
 .sheet-handle{width:36px;height:4px;border-radius:4px;background:var(--line-2);margin:8px auto 14px;}
 .sheet h3{font-size:18px;font-weight:800;margin:0 0 12px;}
 
