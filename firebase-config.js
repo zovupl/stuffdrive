@@ -7,3 +7,6 @@ window.FIREBASE_CONFIG = {
 
 // Вебхук (Google Apps Script): постит новые заявки в топик «Заявки» группы.
 window.NOTIFY_WEBHOOK = "https://script.google.com/macros/s/AKfycbwAOinpNUXY5NIAW-vznHcZ0AEatdC-zaZcaUQwwSpgIqbyTU68hZAOVcsH5mb4LY4ZKQ/exec";
+
+// Куда клиент пишет по вопросам/проблемам (кнопка «Написать администратору» в разделе Инфо).
+window.SUPPORT_LINK = "https://t.me/StuffDive";

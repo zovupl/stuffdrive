@@ -476,6 +476,75 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   padding:11px 34px;cursor:pointer;margin-top:4px;
 }
 
+/* ============ CALENDAR PICKER ============ */
+.sel-row{display:flex;gap:8px;margin-bottom:10px;}
+.sel{flex:1;background:var(--card);border:1.5px solid var(--line-2);border-radius:12px;padding:8px 12px;transition:border-color .2s;}
+.sel.on{border-color:var(--amber);}
+.sel .k{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-faint);}
+.sel .v{font-size:14px;font-weight:800;margin-top:2px;}
+.cal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 8px 8px;margin-bottom:10px;}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:0 2px;}
+.cal-head .m{font-size:14px;font-weight:800;text-transform:capitalize;}
+.cal-nav{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);background:var(--card-2);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit;font-size:18px;line-height:1;padding:0 0 2px;}
+.cal-nav:disabled{opacity:.3;}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:3px;}
+.cal-wd span{text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);row-gap:3px;}
+.cal-d{position:relative;height:36px;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer;border-radius:10px;user-select:none;}
+.cal-d.empty{cursor:default;}
+.cal-d.past{color:var(--text-faint);opacity:.4;cursor:default;}
+.cal-d.busy{color:var(--text-faint);cursor:not-allowed;background:repeating-linear-gradient(135deg,transparent 0 3px,rgba(240,93,69,.14) 3px 5px);}
+.cal-d.busy::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--red);}
+.cal-d.today{box-shadow:inset 0 0 0 1.5px var(--line-2);}
+.cal-d.in{background:rgba(232,163,61,.16);border-radius:0;}
+.cal-d.from,.cal-d.to{background:var(--amber);color:var(--amber-dark);font-weight:800;border-radius:10px;box-shadow:none;}
+.cal-d.from.in{border-radius:10px 0 0 10px;}
+.cal-d.to.in{border-radius:0 10px 10px 0;}
+.cal-legend{display:flex;gap:14px;margin-top:8px;padding:0 3px;font-size:10.5px;font-weight:600;color:var(--text-faint);}
+.cal-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;}
+
+/* statuses / actions */
+.st{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:50px;white-space:nowrap;}
+.st.new{color:var(--amber);background:rgba(232,163,61,.13);}
+.st.confirmed{color:var(--green);background:rgba(61,214,140,.13);}
+.st.cancelled{color:var(--red);background:rgba(240,93,69,.13);}
+.st.past{color:var(--text-faint);background:var(--card-2);}
+.req-item.cancelled .car,.req-item.cancelled .meta{opacity:.55;}
+.req-item .top{gap:8px;}
+.req-actions{display:flex;gap:7px;margin-top:9px;}
+.rbtn{flex:1;border:1px solid var(--line-2);background:var(--card-2);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;border-radius:10px;padding:8px 10px;cursor:pointer;transition:transform .12s;}
+.rbtn:active{transform:scale(.95);}
+.rbtn:disabled{opacity:.5;}
+.rbtn.danger{color:var(--red);border-color:rgba(240,93,69,.4);}
+.rbtn.good{color:var(--green);border-color:rgba(61,214,140,.4);}
+.busy-line{margin-top:11px;font-size:11.5px;font-weight:600;color:var(--text-dim);display:flex;gap:6px;align-items:flex-start;line-height:1.4;}
+.chip-busy{position:absolute;top:52px;right:12px;z-index:4;font-size:10px;font-weight:800;letter-spacing:.02em;color:#fff;background:rgba(14,14,18,.72);border:1px solid rgba(240,93,69,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:4px 9px;border-radius:50px;}
+.afilter{display:flex;gap:6px;margin:-4px 0 10px;}
+.afilter .qd{padding:6px 0;}
+.arefresh{font-size:12px;color:var(--text-faint);text-align:center;margin-top:8px;text-decoration:underline;cursor:pointer;}
+
+/* info sheet */
+.info-h{font-size:14px;font-weight:800;margin:14px 0 7px;}
+.info-h:first-child{margin-top:0;}
+.info-p{font-size:13px;line-height:1.5;color:var(--text-dim);margin:0 0 7px;}
+.info-p b{color:var(--text);}
+.step{display:flex;gap:10px;margin-bottom:9px;}
+.step .n{width:22px;height:22px;border-radius:50%;background:var(--amber);color:var(--amber-dark);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step .t{font-size:13px;line-height:1.45;color:var(--text-dim);}
+.step .t b{color:var(--text);}
+.rule{display:flex;gap:9px;margin-bottom:7px;font-size:13px;line-height:1.45;color:var(--text-dim);}
+.rule .ic{flex-shrink:0;}
+.rule b{color:var(--text);}
+.svc{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 12px;margin-bottom:8px;}
+.svc .ic{font-size:21px;line-height:1.1;flex-shrink:0;}
+.svc .sn{font-size:13.5px;font-weight:800;}
+.svc .sd{font-size:12px;color:var(--text-dim);line-height:1.45;margin-top:2px;}
+.link-btn{display:block;text-align:center;border:1px solid rgba(232,163,61,.5);background:rgba(232,163,61,.12);color:var(--amber);text-decoration:none;font-size:13px;font-weight:800;border-radius:12px;padding:12px;margin-top:12px;}
+
+/* toast */
+.toast{position:absolute;left:14px;right:14px;bottom:calc(16px + var(--safe-bottom));z-index:40;background:var(--text);color:var(--bg);font-size:13px;font-weight:700;padding:11px 14px;border-radius:12px;text-align:center;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:none;}
+
 ::-webkit-scrollbar{width:0;height:0;}
 </style>
 </head>
@@ -493,6 +562,9 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
         <button class="lang-btn" data-lang="es">ES</button>
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="ru">RU</button>
+      </div>
+      <div class="icon-btn" id="infoBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/></svg>
       </div>
       <div class="icon-btn" id="themeBtn">
         <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 12.4A8 8 0 1 1 11.6 4a6.5 6.5 0 0 0 8.4 8.4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -538,16 +610,11 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
           <div class="bp" id="bookCarPrice"></div>
         </div>
       </div>
-      <div class="date-row">
-        <div class="field">
-          <label id="lblFrom"></label>
-          <input type="date" id="dateFrom">
-        </div>
-        <div class="field">
-          <label id="lblTo"></label>
-          <input type="date" id="dateTo">
-        </div>
+      <div class="sel-row">
+        <div class="sel" id="selFrom"><div class="k" id="lblFrom"></div><div class="v" id="selFromV">—</div></div>
+        <div class="sel" id="selTo"><div class="k" id="lblTo"></div><div class="v" id="selToV">—</div></div>
       </div>
+      <div class="cal" id="cal"></div>
       <div class="quick-days" id="quickDays">
         <button class="qd" data-d="1"></button>
         <button class="qd" data-d="3"></button>
@@ -584,6 +651,18 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       <div class="clear-link" id="clearReq"></div>
     </div>
 
+    <!-- info sheet -->
+    <div class="sheet" id="infoSheet">
+      <div class="sheet-handle"></div>
+      <h3 id="infoTitle"></h3>
+      <div class="atabs">
+        <button class="atab active" id="tabRules"></button>
+        <button class="atab" id="tabServices"></button>
+      </div>
+      <div id="infoRules"></div>
+      <div id="infoServices" style="display:none"></div>
+    </div>
+
     <!-- admin sheet -->
     <div class="sheet" id="adminSheet">
       <div class="sheet-handle"></div>
@@ -595,6 +674,8 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       <div id="adminCars"></div>
       <div id="adminBookings" style="display:none"></div>
     </div>
+
+    <div class="toast" id="toast"></div>
 
     <div id="stampOverlay">
       <div class="stamp">
@@ -651,6 +732,32 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       hintTap:'Toca la foto para ver más fotos del coche',
       hintBook:'Pulsa «Reservar» abajo, elige las fechas y envía la solicitud',
       hp:'CV', sec:'s',
+      weekdays:['Lu','Ma','Mi','Ju','Vi','Sá','Do'], legendSel:'Seleccionado', legendBusy:'Ocupado',
+      busyDay:'Ese día ya está reservado', pastDay:'Esa fecha ya pasó', rangeBusy:'Hay días ocupados en ese rango', tooLong:'Máximo 60 días',
+      pickDates:'Elige las fechas de recogida y devolución.', conflictErr:'Estas fechas acaban de reservarse. Elige otras.',
+      busyLabel:'Ocupado', busyNow:'Ocupado hasta',
+      stNew:'Pendiente', stConfirmed:'Confirmada', stCancelled:'Cancelada', stPast:'Finalizada', stByAdmin:'por el administrador',
+      cancelBtn:'Cancelar reserva', cancelAsk:'¿Cancelar esta reserva?', cancelDone:'Reserva cancelada', cancelErr:'No se pudo cancelar. Inténtalo de nuevo.',
+      reqHint:'Un administrador te contactará para confirmar. Puedes cancelar aquí en cualquier momento.',
+      infoTitle:'Información', tabRules:'Cómo funciona', tabServices:'Servicios', contactBtn:'Escribir al administrador',
+      howTitle:'Reservar en 1 minuto',
+      steps:['<b>Elige el coche</b> — desliza las tarjetas, mira fotos y características.',
+             '<b>Pulsa «Reservar»</b>, marca las fechas en el calendario (los días ocupados están en rojo) e indica tu nombre y teléfono.',
+             '<b>La solicitud llega al instante</b> a los administradores. Te contactamos normalmente <b>en menos de 1 hora</b> (9:00–22:00) para confirmar y acordar la entrega.',
+             '<b>Entrega y devolución</b> donde te convenga: nuestra base en Barcelona, aeropuerto El Prat, estación u hotel.'],
+      rulesTitle:'Reglas',
+      rules:[['🪪','<b>Documentos:</b> DNI/pasaporte y carnet de conducir válido.'],
+             ['⛽','<b>Combustible:</b> se devuelve con el mismo nivel que se entrega.'],
+             ['🧾','<b>Multas y daños</b> durante el alquiler son responsabilidad del conductor según el contrato.'],
+             ['❌','<b>Cancelación</b> gratuita desde la app (✓ arriba). Por favor, avisa con al menos 24 h.'],
+             ['🚨','<b>Avería o accidente:</b> contacta con el administrador de inmediato.'],
+             ['🔔','Pulsa <b>Start</b> en @stuffdrivebot para recibir confirmaciones por Telegram.']],
+      svcTitle:'Nuestros servicios', svcNote:'Precios y detalles — con el administrador.',
+      services:[['✈️','Entrega en aeropuerto / hotel','Llevamos y recogemos el coche donde te convenga: aeropuerto El Prat, estación, hotel.'],
+                ['🧑‍✈️','Alquiler con conductor','Traslados, excursiones por Barcelona y Cataluña, viajes de negocios.'],
+                ['🍷','Conductor sobrio','Te llevamos a ti y a tu coche a casa después de una noche fuera.'],
+                ['👶','Sillas infantiles','Sillas y elevadores para cualquier edad, bajo petición.'],
+                ['✨','Detailing','Limpieza profunda del interior, pulido, cerámica y protección de carrocería.']],
       specs:{year:'Año',seats:'Plazas',doors:'Puertas',trans:'Cambio',fuel:'Combustible',consumo:'Consumo',power:'Potencia',accel:'0–100 km/h'},
       vals:{auto:'Automático',manual:'Manual',petrol:'Gasolina',diesel:'Diésel',hybrid:'Híbrido',electric:'Eléctrico'},
       cls:{estate:'Familiar',muscle:'Deportivo',suv:'SUV',compact:'Compacto',premium:'Premium',economy:'Económico',electric:'Eléctrico',convertible:'Cabrio'},
@@ -674,6 +781,32 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       hintTap:'Tap the photo to see more pictures of the car',
       hintBook:'Press “Book” below, pick your dates and send the request',
       hp:'hp', sec:'s',
+      weekdays:['Mo','Tu','We','Th','Fr','Sa','Su'], legendSel:'Selected', legendBusy:'Booked',
+      busyDay:'This day is already booked', pastDay:'That date has passed', rangeBusy:'There are booked days in that range', tooLong:'Maximum 60 days',
+      pickDates:'Choose pick-up and return dates.', conflictErr:'These dates were just booked. Please choose others.',
+      busyLabel:'Booked', busyNow:'Booked until',
+      stNew:'Pending', stConfirmed:'Confirmed', stCancelled:'Cancelled', stPast:'Finished', stByAdmin:'by admin',
+      cancelBtn:'Cancel booking', cancelAsk:'Cancel this booking?', cancelDone:'Booking cancelled', cancelErr:'Could not cancel. Please try again.',
+      reqHint:'An admin will contact you to confirm. You can cancel here at any time.',
+      infoTitle:'Information', tabRules:'How it works', tabServices:'Services', contactBtn:'Message the admin',
+      howTitle:'Book in 1 minute',
+      steps:['<b>Pick a car</b> — swipe the cards, check photos and specs.',
+             '<b>Tap “Book”</b>, mark the dates in the calendar (booked days are in red) and enter your name and phone.',
+             '<b>Your request instantly reaches</b> the admins. We usually get back to you <b>within 1 hour</b> (9:00–22:00) to confirm and arrange the handover.',
+             '<b>Pick-up and return</b> wherever suits you: our base in Barcelona, El Prat airport, train station or your hotel.'],
+      rulesTitle:'Rules',
+      rules:[['🪪','<b>Documents:</b> ID/passport and a valid driving licence.'],
+             ['⛽','<b>Fuel:</b> return the car with the same fuel level as at pick-up.'],
+             ['🧾','<b>Fines and damage</b> during the rental are the driver’s responsibility under the contract.'],
+             ['❌','<b>Free cancellation</b> in the app (✓ at the top). Please give at least 24 h notice.'],
+             ['🚨','<b>Breakdown or accident:</b> contact the admin immediately.'],
+             ['🔔','Press <b>Start</b> in @stuffdrivebot to get confirmations in Telegram.']],
+      svcTitle:'Our services', svcNote:'Prices and details — ask the admin.',
+      services:[['✈️','Airport / hotel delivery','We bring and collect the car wherever suits you: El Prat airport, train station, hotel.'],
+                ['🧑‍✈️','Rental with a driver','Transfers, tours around Barcelona and Catalonia, business trips.'],
+                ['🍷','Designated driver','We get you and your car home safely after a night out.'],
+                ['👶','Child seats','Seats and boosters for any age, on request.'],
+                ['✨','Detailing','Deep interior cleaning, polishing, ceramic coating and paint protection.']],
       specs:{year:'Year',seats:'Seats',doors:'Doors',trans:'Gearbox',fuel:'Fuel',consumo:'Consumption',power:'Power',accel:'0–100 km/h'},
       vals:{auto:'Automatic',manual:'Manual',petrol:'Petrol',diesel:'Diesel',hybrid:'Hybrid',electric:'Electric'},
       cls:{estate:'Estate',muscle:'Muscle car',suv:'SUV',compact:'Compact',premium:'Premium',economy:'Economy',electric:'Electric',convertible:'Convertible'},
@@ -697,6 +830,32 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       hintTap:'Нажми на фото, чтобы посмотреть другие фото машины',
       hintBook:'Нажми «Забронировать» внизу, выбери даты и отправь заявку',
       hp:'л.с.', sec:'с',
+      weekdays:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'], legendSel:'Выбрано', legendBusy:'Занято',
+      busyDay:'Этот день уже занят', pastDay:'Эта дата уже прошла', rangeBusy:'В этом диапазоне есть занятые дни', tooLong:'Максимум 60 дней',
+      pickDates:'Выберите даты получения и возврата.', conflictErr:'Эти даты только что заняли. Выберите другие.',
+      busyLabel:'Занято', busyNow:'Занята до',
+      stNew:'Ожидает', stConfirmed:'Подтверждена', stCancelled:'Отменена', stPast:'Завершена', stByAdmin:'администратором',
+      cancelBtn:'Отменить бронь', cancelAsk:'Отменить эту бронь?', cancelDone:'Бронь отменена', cancelErr:'Не удалось отменить. Попробуйте ещё раз.',
+      reqHint:'Администратор свяжется с вами для подтверждения. Отменить можно здесь в любой момент.',
+      infoTitle:'Информация', tabRules:'Как это работает', tabServices:'Услуги', contactBtn:'Написать администратору',
+      howTitle:'Бронь за 1 минуту',
+      steps:['<b>Выберите машину</b> — листайте карточки, смотрите фото и характеристики.',
+             '<b>Нажмите «Забронировать»</b>, отметьте даты в календаре (занятые дни — красным) и укажите имя и телефон.',
+             '<b>Заявка мгновенно попадает</b> к администраторам. Мы свяжемся с вами обычно <b>в течение 1 часа</b> (9:00–22:00), чтобы подтвердить бронь и договориться о выдаче.',
+             '<b>Выдача и возврат</b> там, где удобно: наша база в Барселоне, аэропорт El Prat, вокзал или ваш отель.'],
+      rulesTitle:'Правила',
+      rules:[['🪪','<b>Документы:</b> паспорт/ID и действующее водительское удостоверение.'],
+             ['⛽','<b>Топливо:</b> возвращаем с тем же уровнем, что при выдаче.'],
+             ['🧾','<b>Штрафы и повреждения</b> во время аренды — ответственность водителя по договору.'],
+             ['❌','<b>Отмена</b> бесплатно в приложении (✓ вверху). Пожалуйста, предупреждайте минимум за 24 часа.'],
+             ['🚨','<b>Поломка или ДТП:</b> сразу свяжитесь с администратором.'],
+             ['🔔','Нажмите <b>Start</b> у @stuffdrivebot, чтобы получать подтверждения в Telegram.']],
+      svcTitle:'Наши услуги', svcNote:'Стоимость и детали — у администратора.',
+      services:[['✈️','Подача авто в аэропорт / отель','Привезём и заберём машину там, где вам удобно: аэропорт El Prat, вокзал, отель.'],
+                ['🧑‍✈️','Аренда с личным водителем','Трансферы, поездки по Барселоне и Каталонии, деловые поездки.'],
+                ['🍷','Трезвый водитель','Доставим вас и вашу машину домой после вечера.'],
+                ['👶','Детские кресла','Кресла и бустеры для любого возраста по запросу.'],
+                ['✨','Детейлинг','Химчистка салона, полировка, керамика и защита кузова.']],
       specs:{year:'Год',seats:'Мест',doors:'Дверей',trans:'Коробка',fuel:'Топливо',consumo:'Расход',power:'Мощность',accel:'0–100 км/ч'},
       vals:{auto:'Автомат',manual:'Механика',petrol:'Бензин',diesel:'Дизель',hybrid:'Гибрид',electric:'Электро'},
       cls:{estate:'Универсал',muscle:'Спорткар',suv:'Внедорожник',compact:'Компакт',premium:'Премиум',economy:'Эконом',electric:'Электро',convertible:'Кабриолет'},
@@ -757,6 +916,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
 
   let cars = [];
   let allCars = [];   // включая скрытые — для админ-панели
+  let busy = {};      // carId -> [{from,to}] занятые даты (публичная коллекция availability)
   let current = 0;
   let activeBookingCar = null;
   let isAdmin = false;
@@ -808,35 +968,64 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     allCars = DEMO_CARS;
   }
 
-  async function saveBooking(b){
+  // занятые даты всех машин — только интервалы, без личных данных
+  async function loadAvailability(){
+    if (!FB) return;
     try{
-      const mine = JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY) || '[]');
-      mine.unshift(b);
-      localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(mine.slice(0,50)));
-    }catch(e){}
-    if (FB){
-      const fields = {}; for (const k in b) fields[k] = toFv(b[k]);
-      const res = await fetch(fireBase() + '/bookings?key=' + FB.apiKey, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({fields})
+      const res = await fetch(fireBase() + '/availability?pageSize=300&key=' + FB.apiKey, {cache:'no-store'});
+      const data = await res.json();
+      const map = {};
+      (data.documents||[]).forEach(d=>{
+        const o = docToObj(d);
+        map[o.id] = (o.ranges||[]).filter(r=>r && r.from && r.to);
       });
-      if (!res.ok) throw new Error('firestore ' + res.status);
-    }
-    if (window.NOTIFY_WEBHOOK){
-      try{ fetch(window.NOTIFY_WEBHOOK, {method:'POST', body: JSON.stringify({type:'booking', booking:b})}).catch(()=>{}); }catch(e){}
-    }
+      busy = map;
+    }catch(e){}
+  }
+
+  // запрос к серверу (Apps Script): создание брони, статусы, отмена, админ-операции
+  async function apiPost(payload){
+    if (!window.NOTIFY_WEBHOOK) return null;
+    const res = await fetch(window.NOTIFY_WEBHOOK, {method:'POST', body: JSON.stringify(payload)});
+    return await res.json();
   }
 
   const loadMy = () => { try{ return JSON.parse(localStorage.getItem(MY_BOOKINGS_KEY)||'[]'); }catch(e){ return []; } };
+  const storeMy = list => { try{ localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(list.slice(0,50))); }catch(e){} };
   const clearMy = () => { try{ localStorage.removeItem(MY_BOOKINGS_KEY); }catch(e){} };
+  function addMy(b){ const l = loadMy(); l.unshift(b); storeMy(l); }
+  function mergeMy(updates){ // обновить статусы своих броней данными с сервера
+    const l = loadMy();
+    updates.forEach(u=>{ const i = l.findIndex(x=>x.bookingId===u.bookingId); if (i>=0) l[i] = Object.assign({}, l[i], u); });
+    storeMy(l);
+  }
 
   // ================= helpers =================
   const $ = id => document.getElementById(id);
   const setTxt = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const todayStr = () => new Date().toISOString().slice(0,10);
-  const addDays = (dstr, n) => { const d = new Date(dstr); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
-  const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+  const pad2 = n => (n<10?'0':'')+n;
+  const ymd = d => d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+  const parseD = s => { const p = String(s).split('-').map(Number); return new Date(p[0], p[1]-1, p[2]); };
+  const todayStr = () => ymd(new Date());
+  const addDays = (dstr, n) => { const d = parseD(dstr); d.setDate(d.getDate()+n); return ymd(d); };
+  const daysBetween = (a,b) => Math.round((parseD(b) - parseD(a)) / 86400000);
+  const locale = () => lang === 'ru' ? 'ru-RU' : (lang === 'es' ? 'es-ES' : 'en-GB');
+  const fmtD = s => s ? parseD(s).toLocaleDateString(locale(), {day:'numeric', month:'short'}) : '—';
+  const fmtRange = (a,b) => fmtD(a) + ' → ' + fmtD(b);
+  const isBusy = (carId, d) => (busy[carId]||[]).some(r => r.from <= d && d <= r.to);
+  const rangeFree = (carId, a, b) => !(busy[carId]||[]).some(r => a <= r.to && r.from <= b);
+  const upcomingBusy = carId => (busy[carId]||[]).filter(r => r.to >= todayStr()).sort((x,y)=>x.from.localeCompare(y.from));
+  const statusOf = b => b.status === 'cancelled' ? 'cancelled' : (b.to && b.to < todayStr() ? 'past' : (b.status === 'confirmed' ? 'confirmed' : 'new'));
+  const statusText = st => st === 'confirmed' ? T().stConfirmed : st === 'cancelled' ? T().stCancelled : st === 'past' ? T().stPast : T().stNew;
+  const statusBadge = b => { const st = statusOf(b); return `<span class="st ${st}">${esc(statusText(st))}</span>`; };
+
+  let toastTimer = null;
+  function showToast(msg){
+    const t = $('toast'); if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+  }
 
   // ================= render =================
   const deck = $('deck'), dotsEl = $('dots');
@@ -884,11 +1073,24 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       ${ph.length>1 ? '<div class="tz l" data-go="-1"></div><div class="tz r" data-go="1"></div>' : ''}
       <div class="chip-class">${esc(trCls(car.cls))}</div>
       ${discountPct(car) ? `<div class="chip-disc">−${discountPct(car)}%</div>` : ''}
+      ${busyNowHTML(car)}
       <div class="title-block">
         <div class="nm">${esc(car.name)}</div>
         <div class="sub">${esc(car.year||'')}${car.year?' · ':''}Barcelona</div>
       </div>
       ${camHint}`;
+  }
+
+  // машина занята прямо сейчас → чип «Занята до …»
+  function busyNowHTML(car){
+    const t = todayStr();
+    const r = (busy[car.id]||[]).find(x => x.from <= t && t <= x.to);
+    return r ? `<div class="chip-busy">${esc(T().busyNow)} ${esc(fmtD(r.to))}</div>` : '';
+  }
+  function busyLineHTML(car){
+    const r = upcomingBusy(car.id).slice(0,3);
+    if (!r.length) return '';
+    return `<div class="busy-line"><span>📅</span><span><b>${esc(T().busyLabel)}:</b> ${r.map(x=>esc(fmtRange(x.from,x.to))).join(' · ')}</span></div>`;
   }
 
   function cardHTML(car){
@@ -897,6 +1099,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       <div class="details">
         <div class="spec-row">${specsHTML(car)}</div>
         <div class="feats">${(car.features||[]).map(f=>`<div class="feat">${esc(trFeat(f))}</div>`).join('')}</div>
+        ${busyLineHTML(car)}
       </div>`;
   }
 
@@ -1049,24 +1252,30 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   }
 
   // ================= sheets =================
-  const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), adminSheet = $('adminSheet'), stampOverlay = $('stampOverlay');
+  const overlay = $('overlay'), bookingSheet = $('bookingSheet'), requestsSheet = $('requestsSheet'), adminSheet = $('adminSheet'), infoSheet = $('infoSheet'), stampOverlay = $('stampOverlay');
+  const ALL_SHEETS = [bookingSheet, requestsSheet, adminSheet, infoSheet];
   let sheetOpen = false;
   function openSheet(s){
+    ALL_SHEETS.forEach(x=>{ if (x !== s) x.classList.remove('show'); });
     sheetOpen = true;
     overlay.classList.add('show'); s.classList.add('show');
+    s.scrollTop = 0;
     if (inTG && tg.MainButton){ try{ tg.MainButton.hide(); }catch(e){} }
+    if (inTG && tg.BackButton){ try{ tg.BackButton.show(); }catch(e){} }
   }
   function closeSheets(){
     sheetOpen = false;
     overlay.classList.remove('show');
-    bookingSheet.classList.remove('show');
-    requestsSheet.classList.remove('show');
-    adminSheet.classList.remove('show');
+    ALL_SHEETS.forEach(x=>x.classList.remove('show'));
+    if (inTG && tg.BackButton){ try{ tg.BackButton.hide(); }catch(e){} }
     updateCta();
   }
   overlay.addEventListener('click', closeSheets);
+  if (inTG && tg.BackButton){ try{ tg.BackButton.onClick(closeSheets); }catch(e){} }
 
   // ---- booking ----
+  const cal = { y:0, m:0, from:null, to:null };
+
   function openBooking(){
     if (!cars.length) return;
     activeBookingCar = cars[current];
@@ -1074,19 +1283,18 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     $('bookThumb').src = ph[0] || '';
     setTxt('bookCarName', activeBookingCar.name);
     setBookPrice();
-    const from = $('dateFrom'), to = $('dateTo');
-    from.min = todayStr();
-    if (!from.value) from.value = todayStr();
-    to.min = addDays(from.value, 1);
-    if (!to.value || new Date(to.value) <= new Date(from.value)) to.value = addDays(from.value, 3);
+    const t = parseD(todayStr());
+    cal.y = t.getFullYear(); cal.m = t.getMonth(); cal.from = null; cal.to = null;
     $('dateErr').classList.remove('show');
     $('formErr').classList.remove('show');
     let pre = '';
     try{ pre = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || ''; }catch(e){}
     if (pre && !$('nameInput').value) $('nameInput').value = pre;
+    renderCal();
     updateTotal();
     haptic('medium');
     openSheet(bookingSheet);
+    loadAvailability().then(()=>{ if (bookingSheet.classList.contains('show')) renderCal(); });
   }
   $('mainBookBtn').addEventListener('click', openBooking);
   if (inTG && tg.MainButton){
@@ -1100,8 +1308,102 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       + (d ? ' · <s>€' + esc(activeBookingCar.baseprice) + '</s> <b>−' + d + '%</b>' : '');
   }
 
+  // ---- календарь выбора дат ----
+  function renderCal(){
+    const el = $('cal');
+    if (!el || !activeBookingCar) return;
+    const carId = activeBookingCar.id;
+    const today = todayStr();
+    const first = new Date(cal.y, cal.m, 1);
+    const monthName = first.toLocaleDateString(locale(), {month:'long', year:'numeric'});
+    const dim = new Date(cal.y, cal.m+1, 0).getDate();
+    const lead = (first.getDay() + 6) % 7; // неделя с понедельника
+    const now = parseD(today);
+    const canPrev = cal.y > now.getFullYear() || (cal.y === now.getFullYear() && cal.m > now.getMonth());
+    const canNext = new Date(cal.y, cal.m+1, 1) < new Date(now.getFullYear(), now.getMonth()+12, 1);
+    let cells = '';
+    for (let i=0;i<lead;i++) cells += '<div class="cal-d empty"></div>';
+    for (let d=1; d<=dim; d++){
+      const sd = cal.y+'-'+pad2(cal.m+1)+'-'+pad2(d);
+      const cls = ['cal-d'];
+      if (sd < today) cls.push('past');
+      else if (isBusy(carId, sd)) cls.push('busy');
+      if (sd === today) cls.push('today');
+      const hasRange = cal.from && cal.to && cal.to !== cal.from;
+      if (hasRange && sd > cal.from && sd < cal.to) cls.push('in');
+      if (sd === cal.from){ cls.push('from'); if (hasRange) cls.push('in'); }
+      if (sd === cal.to){ cls.push('to'); if (hasRange) cls.push('in'); }
+      cells += `<div class="${cls.join(' ')}" data-d="${sd}">${d}</div>`;
+    }
+    el.innerHTML = `
+      <div class="cal-head">
+        <button class="cal-nav" data-nav="-1" ${canPrev?'':'disabled'}>‹</button>
+        <div class="m">${esc(monthName)}</div>
+        <button class="cal-nav" data-nav="1" ${canNext?'':'disabled'}>›</button>
+      </div>
+      <div class="cal-wd">${T().weekdays.map(w=>`<span>${esc(w)}</span>`).join('')}</div>
+      <div class="cal-grid">${cells}</div>
+      <div class="cal-legend"><span><i style="background:var(--amber)"></i>${esc(T().legendSel)}</span><span><i style="background:var(--red)"></i>${esc(T().legendBusy)}</span></div>`;
+    $('selFrom').classList.toggle('on', !!cal.from);
+    $('selTo').classList.toggle('on', !!cal.to);
+    setTxt('selFromV', cal.from ? fmtD(cal.from) : '—');
+    setTxt('selToV', cal.to ? fmtD(cal.to) : '—');
+  }
+
+  $('cal').addEventListener('click', e=>{
+    const nav = e.target.closest('.cal-nav');
+    if (nav){
+      if (nav.disabled) return;
+      cal.m += parseInt(nav.dataset.nav,10);
+      if (cal.m < 0){ cal.m = 11; cal.y--; }
+      if (cal.m > 11){ cal.m = 0; cal.y++; }
+      haptic('light'); renderCal(); return;
+    }
+    const d = e.target.closest('.cal-d');
+    if (!d || !d.dataset.d) return;
+    if (d.classList.contains('past')){ notifyH('warning'); showToast(T().pastDay); return; }
+    if (d.classList.contains('busy')){ notifyH('warning'); showToast(T().busyDay); return; }
+    pickDate(d.dataset.d);
+  });
+
+  function pickDate(sd){
+    const carId = activeBookingCar.id;
+    if (!cal.from || cal.to || sd <= cal.from){
+      cal.from = sd; cal.to = null;
+    } else if (!rangeFree(carId, cal.from, sd)){
+      notifyH('warning'); showToast(T().rangeBusy);
+      cal.from = sd; cal.to = null;
+    } else if (daysBetween(cal.from, sd) > 60){
+      notifyH('warning'); showToast(T().tooLong); return;
+    } else {
+      cal.to = sd;
+    }
+    $('dateErr').classList.remove('show');
+    haptic('light');
+    renderCal();
+    updateTotal();
+  }
+
+  // быстрый выбор: ближайшее свободное окно на N дней, начиная с выбранной даты (или сегодня)
+  function quickPick(n){
+    const carId = activeBookingCar.id;
+    let start = (cal.from && !cal.to) ? cal.from : (cal.from || todayStr());
+    if (start < todayStr()) start = todayStr();
+    for (let i=0; i<366; i++){
+      const a = addDays(start, i), b = addDays(a, n);
+      if (rangeFree(carId, a, b)){
+        cal.from = a; cal.to = b;
+        const d = parseD(a); cal.y = d.getFullYear(); cal.m = d.getMonth();
+        if (i > 0) showToast(fmtRange(a,b));
+        return true;
+      }
+    }
+    showToast(T().rangeBusy);
+    return false;
+  }
+
   function updateTotal(){
-    const from = $('dateFrom').value, to = $('dateTo').value;
+    const from = cal.from, to = cal.to;
     const tv = $('totalValue');
     setTxt('totalLabel', T().total);
     document.querySelectorAll('.qd').forEach(b=>{
@@ -1114,28 +1416,23 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     if (n <= 0){ tv.textContent = '—'; return; }
     tv.innerHTML = esc(T().days(n)) + ' × €' + esc(activeBookingCar.priceperday) + ' = <span>€' + esc(n * activeBookingCar.priceperday) + '</span>';
   }
-  $('dateFrom').addEventListener('change', ()=>{ $('dateTo').min = addDays($('dateFrom').value||todayStr(),1); updateTotal(); });
-  $('dateTo').addEventListener('change', updateTotal);
   $('quickDays').addEventListener('click', e=>{
     const b = e.target.closest('.qd');
-    if (!b) return;
-    const from = $('dateFrom').value || todayStr();
-    $('dateFrom').value = from;
-    $('dateTo').value = addDays(from, parseInt(b.dataset.d,10));
+    if (!b || !activeBookingCar) return;
     haptic('light');
-    updateTotal();
+    if (quickPick(parseInt(b.dataset.d,10))){ $('dateErr').classList.remove('show'); renderCal(); updateTotal(); }
   });
 
   $('confirmBtn').addEventListener('click', async ()=>{
-    const from = $('dateFrom').value, to = $('dateTo').value;
+    const from = cal.from, to = cal.to;
     const name = $('nameInput').value.trim(), phone = $('phoneInput').value.trim(), note = $('noteInput').value.trim();
     const dateErr = $('dateErr'), formErr = $('formErr');
     dateErr.classList.remove('show'); formErr.classList.remove('show');
-    setTxt('dateErr', T().dateErr);
     setTxt('formErr', T().formErr);
 
-    if (!from || !to || new Date(to) <= new Date(from)){ dateErr.classList.add('show'); return; }
-    if (!name || !phone){ formErr.classList.add('show'); return; }
+    if (!from || !to || daysBetween(from, to) <= 0){ setTxt('dateErr', T().pickDates); dateErr.classList.add('show'); notifyH('warning'); return; }
+    if (!rangeFree(activeBookingCar.id, from, to)){ setTxt('dateErr', T().conflictErr); dateErr.classList.add('show'); notifyH('warning'); renderCal(); return; }
+    if (!name || !phone){ formErr.classList.add('show'); notifyH('warning'); return; }
 
     const btn = $('confirmBtn');
     btn.disabled = true; btn.textContent = T().sending;
@@ -1147,28 +1444,45 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     }catch(e){}
 
     const n = daysBetween(from, to);
+    const car = activeBookingCar;
     const booking = {
-      bookingId: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-      carId: activeBookingCar.id,
-      carName: activeBookingCar.name,
-      priceperday: activeBookingCar.priceperday,
-      days: n,
-      total: n * activeBookingCar.priceperday,
+      carId: car.id, carName: car.name, priceperday: car.priceperday,
+      days: n, total: n * car.priceperday,
       from, to, name, phone, note,
-      createdAt: new Date().toISOString(),
-      tgUser, tgUserId,
-      status: 'new',
-      lang,
+      tgUser, tgUserId, lang,
+      initData: (tg && tg.initData) || '',
     };
 
     try{
-      await saveBooking(booking);
+      let saved;
+      if (window.NOTIFY_WEBHOOK){
+        const r = await apiPost({type:'booking', booking});
+        if (!r || !r.ok){
+          if (r && r.error === 'conflict'){
+            if (r.busy) busy[car.id] = r.busy;
+            setTxt('dateErr', T().conflictErr); dateErr.classList.add('show');
+            notifyH('warning'); renderCal(); renderDeck();
+            return;
+          }
+          throw new Error((r && r.error) || 'send');
+        }
+        saved = r.booking;
+        if (r.busy) busy[car.id] = r.busy;
+      } else {
+        // демо-режим без сервера: только локально
+        saved = Object.assign({bookingId:'local_'+Date.now(), status:'new', createdAt:new Date().toISOString()}, booking);
+        delete saved.initData;
+        busy[car.id] = (busy[car.id]||[]).concat([{from, to}]);
+      }
+      addMy(saved);
       notifyH('success');
       closeSheets();
       stampOverlay.classList.add('show');
       setTimeout(()=>stampOverlay.classList.remove('show'), 1900);
       $('noteInput').value = '';
+      cal.from = null; cal.to = null;
       updateMyBadge();
+      renderDeck();
     }catch(e){
       notifyH('error');
       setTxt('formErr', T().sendErr);
@@ -1180,28 +1494,107 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
 
   // ---- my reservations badge (виден только когда есть брони) ----
   function updateMyBadge(){
-    const n = loadMy().length;
+    const items = loadMy();
+    const active = items.filter(b => statusOf(b) === 'new' || statusOf(b) === 'confirmed').length;
     const b = $('myBadge');
     if (!b) return;
-    b.style.display = n > 0 ? 'flex' : 'none';
-    setTxt('myBadgeN', String(n));
+    b.style.display = items.length > 0 ? 'flex' : 'none';
+    setTxt('myBadgeN', String(active || items.length));
   }
   $('myBadge').addEventListener('click', ()=>{
     haptic('light');
     renderRequests();
     openSheet(requestsSheet);
+    refreshMine();
+  });
+
+  // актуальные статусы своих броней с сервера (подтверждена / отменена админом)
+  async function refreshMine(){
+    const items = loadMy().filter(b => b.bookingId && b.cancelToken);
+    if (!items.length || !window.NOTIFY_WEBHOOK) return;
+    try{
+      const r = await apiPost({type:'client', op:'mine', items: items.map(b=>({bookingId:b.bookingId, token:b.cancelToken}))});
+      if (r && r.ok && Array.isArray(r.bookings)){
+        mergeMy(r.bookings);
+        if (requestsSheet.classList.contains('show')) renderRequests();
+        updateMyBadge();
+      }
+    }catch(e){}
+  }
+
+  function renderRequests(){
+    const list = $('reqList');
+    const items = loadMy();
+    if (!items.length){ list.innerHTML = `<div class="req-empty">${T().reqEmpty}</div>`; return; }
+    list.innerHTML = items.map(b=>{
+      const st = statusOf(b);
+      const canCancel = (st === 'new' || st === 'confirmed') && !!b.cancelToken;
+      return `
+      <div class="req-item ${st}" data-id="${esc(b.bookingId||'')}">
+        <div class="top">
+          <div class="car">${esc(b.carName)}</div>
+          ${statusBadge(b)}
+        </div>
+        <div class="meta">
+          📅 ${esc(fmtRange(b.from, b.to))}${b.total ? ' · €'+esc(b.total) : ''}<br>
+          ${esc(b.name)} · ${esc(b.phone)}
+          ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
+          ${st === 'cancelled' && b.cancelledBy === 'admin' ? '<br><span style="color:var(--text-faint)">' + esc(T().stCancelled + ' ' + T().stByAdmin) + '</span>' : ''}
+        </div>
+        ${canCancel ? `<div class="req-actions"><button class="rbtn danger" data-act="cancel">${esc(T().cancelBtn)}</button></div>` : ''}
+      </div>`;
+    }).join('');
+    setTxt('reqSub', T().reqHint);
+  }
+
+  function askConfirm(msg, cb){
+    if (tg && tg.showConfirm){
+      try{ tg.showConfirm(msg, ok => { if (ok) cb(); }); return; }catch(e){}
+    }
+    if (confirm(msg)) cb();
+  }
+
+  $('reqList').addEventListener('click', e=>{
+    const btn = e.target.closest('[data-act="cancel"]');
+    if (!btn) return;
+    const item = btn.closest('.req-item');
+    const b = loadMy().find(x => x.bookingId === item.dataset.id);
+    if (!b) return;
+    haptic('medium');
+    askConfirm(T().cancelAsk, async ()=>{
+      btn.disabled = true; btn.textContent = '…';
+      try{
+        let ok = false;
+        if (window.NOTIFY_WEBHOOK){
+          const r = await apiPost({type:'client', op:'cancel', bookingId:b.bookingId, token:b.cancelToken, initData:(tg && tg.initData) || ''});
+          ok = !!(r && r.ok);
+          if (ok && r.booking) mergeMy([r.booking]);
+        } else {
+          mergeMy([{bookingId:b.bookingId, status:'cancelled', cancelledBy:'client'}]);
+          busy[b.carId] = (busy[b.carId]||[]).filter(r => !(r.from === b.from && r.to === b.to));
+          ok = true;
+        }
+        if (!ok) throw new Error('cancel');
+        notifyH('success');
+        showToast(T().cancelDone);
+        await loadAvailability();
+        renderRequests(); updateMyBadge(); renderDeck();
+      }catch(err){
+        notifyH('error');
+        showToast(T().cancelErr);
+        btn.disabled = false; btn.textContent = T().cancelBtn;
+      }
+    });
+  });
+
+  $('clearReq').addEventListener('click', ()=>{
+    askConfirm(T().clearAsk, ()=>{ clearMy(); renderRequests(); updateMyBadge(); });
   });
 
   // ================= admin panel =================
   async function adminApi(op, extra){
-    if (!window.NOTIFY_WEBHOOK) return null;
-    try{
-      const res = await fetch(window.NOTIFY_WEBHOOK, {
-        method:'POST',
-        body: JSON.stringify(Object.assign({type:'admin', initData:(tg && tg.initData) || '', op}, extra || {})),
-      });
-      return await res.json();
-    }catch(e){ return null; }
+    try{ return await apiPost(Object.assign({type:'admin', initData:(tg && tg.initData) || '', op}, extra || {})); }
+    catch(e){ return null; }
   }
 
   async function initAdmin(){
@@ -1227,7 +1620,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   $('tabBookings').addEventListener('click', ()=>{
     $('tabBookings').classList.add('active'); $('tabCars').classList.remove('active');
     $('adminBookings').style.display = ''; $('adminCars').style.display = 'none';
-    renderAdminBookings();
+    renderAdminBookings(true);
   });
 
   function renderAdminCars(){
@@ -1241,6 +1634,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
         <div>
           <div class="an">${esc(c.name)}</div>
           <div class="as">${on?'✅ в каталоге':'🚫 скрыта'} · €${esc(c.priceperday)}/день${d?' (обычная €'+esc(c.baseprice)+', −'+d+'%)':''}</div>
+          ${upcomingBusy(c.id).length ? `<div class="as">📅 занято: ${upcomingBusy(c.id).slice(0,4).map(r=>esc(fmtRange(r.from,r.to))).join(' · ')}</div>` : ''}
         </div>
         <div class="acar-r">
           <button class="abtn" data-act="price">€</button>
@@ -1307,52 +1701,112 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     }
   });
 
-  async function renderAdminBookings(){
+  let adminBookingsCache = null;
+  let adminFilter = 'active';
+
+  async function renderAdminBookings(force){
     const box = $('adminBookings');
-    box.innerHTML = '<div class="aloading">Загружаем заявки…</div>';
-    const r = await adminApi('bookings');
-    if (!r || !r.ok){ box.innerHTML = '<div class="aloading">Не удалось загрузить</div>'; return; }
-    if (!r.bookings.length){ box.innerHTML = '<div class="aloading">Заявок пока нет</div>'; return; }
-    box.innerHTML = r.bookings.map(b=>`
-      <div class="req-item">
-        <div class="top">
-          <div class="car">${esc(b.carName)}</div>
-          <div class="when">${b.createdAt ? new Date(b.createdAt).toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}) : ''} <span class="astatus new">${esc(b.status||'new')}</span></div>
-        </div>
-        <div class="meta">
-          ${esc(b.from)} → ${esc(b.to)}${b.total?' · €'+esc(b.total):''}<br>
-          ${esc(b.name)} · ${esc(b.phone)}${b.tgUser?' · @'+esc(b.tgUser):''}
-          ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
-        </div>
-      </div>`).join('');
-  }
-
-  function renderRequests(){
-    const list = $('reqList');
-    const items = loadMy();
-    if (!items.length){ list.innerHTML = `<div class="req-empty">${T().reqEmpty}</div>`; return; }
-    const locale = lang === 'ru' ? 'ru-RU' : (lang === 'es' ? 'es-ES' : 'en-GB');
-    list.innerHTML = items.map(b=>`
-      <div class="req-item">
-        <div class="top">
-          <div class="car">${esc(b.carName)}</div>
-          <div class="when">${new Date(b.createdAt).toLocaleDateString(locale,{day:'2-digit',month:'short'})}</div>
-        </div>
-        <div class="meta">
-          ${esc(b.from)} → ${esc(b.to)}${b.total ? ' · €'+esc(b.total) : ' · €'+esc(b.priceperday)+'/'+esc(T().day)}<br>
-          ${esc(b.name)} · ${esc(b.phone)}
-          ${b.note ? '<br>«'+esc(b.note)+'»' : ''}
-        </div>
-      </div>`).join('');
-  }
-
-  $('clearReq').addEventListener('click', ()=>{
-    const doClear = () => { clearMy(); renderRequests(); updateMyBadge(); };
-    if (tg && tg.showConfirm){
-      try{ tg.showConfirm(T().clearAsk, ok => { if (ok) doClear(); }); return; }catch(e){}
+    if (!adminBookingsCache || force){
+      box.innerHTML = '<div class="aloading">Загружаем заявки…</div>';
+      const r = await adminApi('bookings');
+      if (!r || !r.ok){ box.innerHTML = '<div class="aloading">Не удалось загрузить</div>'; return; }
+      adminBookingsCache = r.bookings;
     }
-    if (confirm(T().clearAsk)) doClear();
+    const all = adminBookingsCache;
+    const items = adminFilter === 'active' ? all.filter(b => statusOf(b) === 'new' || statusOf(b) === 'confirmed') : all;
+    const filters = `<div class="afilter">
+        <button class="qd ${adminFilter==='active'?'active':''}" data-f="active">Актуальные (${all.filter(b => statusOf(b)==='new'||statusOf(b)==='confirmed').length})</button>
+        <button class="qd ${adminFilter==='all'?'active':''}" data-f="all">Все (${all.length})</button>
+      </div>`;
+    if (!items.length){ box.innerHTML = filters + '<div class="aloading">Заявок нет</div>'; return; }
+    const stRu = st => st === 'confirmed' ? 'Подтверждена' : st === 'cancelled' ? 'Отменена' : st === 'past' ? 'Завершена' : 'Новая';
+    box.innerHTML = filters + items.map(b=>{
+      const st = statusOf(b);
+      const canConfirm = st === 'new';
+      const canCancel = st === 'new' || st === 'confirmed';
+      return `
+      <div class="req-item ${st}" data-id="${esc(b.bookingId||'')}">
+        <div class="top">
+          <div class="car">${esc(b.carName)}</div>
+          <span class="st ${st}">${stRu(st)}</span>
+        </div>
+        <div class="meta">
+          📅 <b>${esc(fmtRange(b.from, b.to))}</b>${b.days?' · '+esc(b.days)+' дн.':''}${b.total?' · €'+esc(b.total):''}<br>
+          👤 ${esc(b.name)} · <a href="tel:${esc(b.phone)}" style="color:var(--amber);text-decoration:none">${esc(b.phone)}</a>${b.tgUser?' · <a href="https://t.me/'+esc(b.tgUser)+'" style="color:var(--amber);text-decoration:none">@'+esc(b.tgUser)+'</a>':''}
+          ${b.note ? '<br>💬 «'+esc(b.note)+'»' : ''}
+          ${st === 'cancelled' ? '<br><span style="color:var(--text-faint)">отменена ' + (b.cancelledBy === 'client' ? 'клиентом' : 'админом') + '</span>' : ''}
+          <br><span style="color:var(--text-faint);font-size:11px">${b.createdAt ? 'создана ' + new Date(b.createdAt).toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}) : ''} · #${esc(String(b.bookingId||'').replace(/^bk_/,'').slice(-8).toUpperCase())}</span>
+        </div>
+        ${(canConfirm||canCancel) ? `<div class="req-actions">
+          ${canConfirm ? '<button class="rbtn good" data-act="confirm">✅ Подтвердить</button>' : ''}
+          ${canCancel ? '<button class="rbtn danger" data-act="cancel">❌ Отменить</button>' : ''}
+        </div>` : ''}
+      </div>`;
+    }).join('') + '<div class="arefresh" data-act="refresh">Обновить список</div>';
+  }
+
+  $('adminBookings').addEventListener('click', async e=>{
+    const f = e.target.closest('[data-f]');
+    if (f){ adminFilter = f.dataset.f; haptic('light'); renderAdminBookings(); return; }
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === 'refresh'){ haptic('light'); renderAdminBookings(true); return; }
+    const item = btn.closest('.req-item');
+    const b = (adminBookingsCache||[]).find(x => x.bookingId === item.dataset.id);
+    if (!b) return;
+    const label = b.carName + ' · ' + fmtRange(b.from, b.to) + ' · ' + b.name;
+    const msg = act === 'confirm' ? 'Подтвердить бронь?\n' + label : 'Отменить бронь?\n' + label;
+    haptic('medium');
+    askConfirm(msg, async ()=>{
+      item.querySelectorAll('.rbtn').forEach(x=>x.disabled=true);
+      btn.textContent = '…';
+      const r = await adminApi(act, {bookingId:b.bookingId});
+      if (r && r.ok){
+        if (r.booking) Object.assign(b, r.booking);
+        else b.status = act === 'confirm' ? 'confirmed' : 'cancelled';
+        notifyH('success');
+        showToast(act === 'confirm' ? 'Бронь подтверждена' : 'Бронь отменена');
+        await loadAvailability();
+        renderAdminBookings();
+        renderDeck();
+      } else {
+        notifyH('error');
+        showToast('Ошибка: ' + ((r && r.error) || 'нет связи'));
+        renderAdminBookings();
+      }
+    });
   });
+
+  // ================= info sheet =================
+  $('infoBtn').addEventListener('click', ()=>{
+    haptic('light');
+    renderInfo();
+    openSheet(infoSheet);
+  });
+  $('tabRules').addEventListener('click', ()=>{
+    $('tabRules').classList.add('active'); $('tabServices').classList.remove('active');
+    $('infoRules').style.display = ''; $('infoServices').style.display = 'none';
+  });
+  $('tabServices').addEventListener('click', ()=>{
+    $('tabServices').classList.add('active'); $('tabRules').classList.remove('active');
+    $('infoServices').style.display = ''; $('infoRules').style.display = 'none';
+  });
+  function renderInfo(){
+    const L = T();
+    const link = window.SUPPORT_LINK || 'https://t.me/StuffDive';
+    $('infoRules').innerHTML =
+      `<div class="info-h">${esc(L.howTitle)}</div>` +
+      L.steps.map((t,i)=>`<div class="step"><div class="n">${i+1}</div><div class="t">${t}</div></div>`).join('') +
+      `<div class="info-h">${esc(L.rulesTitle)}</div>` +
+      L.rules.map(r=>`<div class="rule"><span class="ic">${r[0]}</span><span>${r[1]}</span></div>`).join('') +
+      `<a class="link-btn" href="${esc(link)}" target="_blank" rel="noopener">${esc(L.contactBtn)}</a>`;
+    $('infoServices').innerHTML =
+      `<div class="info-h">${esc(L.svcTitle)}</div>` +
+      L.services.map(x=>`<div class="svc"><div class="ic">${x[0]}</div><div><div class="sn">${esc(x[1])}</div><div class="sd">${esc(x[2])}</div></div></div>`).join('') +
+      `<div class="info-p" style="margin-top:10px">${esc(L.svcNote)}</div>` +
+      `<a class="link-btn" href="${esc(link)}" target="_blank" rel="noopener">${esc(L.contactBtn)}</a>`;
+  }
 
   // ================= onboarding hint =================
   const HINT_KEY = 'pas:hint-v2';
@@ -1392,9 +1846,14 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     setTxt('hintSwipe', T().hintSwipe);
     setTxt('hintTap', T().hintTap);
     setTxt('hintBook', T().hintBook);
+    setTxt('infoTitle', T().infoTitle);
+    setTxt('tabRules', T().tabRules);
+    setTxt('tabServices', T().tabServices);
+    if (infoSheet.classList.contains('show')) renderInfo();
     if (activeBookingCar){
       setBookPrice();
       updateTotal();
+      if (bookingSheet.classList.contains('show')) renderCal();
     } else {
       setTxt('totalLabel', T().total);
       document.querySelectorAll('.qd').forEach(b=>{ b.textContent = T().days(parseInt(b.dataset.d,10)); });
@@ -1423,10 +1882,13 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   applyLang();
   updateMyBadge();
   (async function init(){
-    await loadFleet();
+    await Promise.all([loadFleet(), loadAvailability()]);
     renderDeck();
     maybeShowHint();
     initAdmin();
+    refreshMine();
+    // при возврате в приложение — обновить занятость
+    document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) loadAvailability().then(()=>{ renderDeck(); if (bookingSheet.classList.contains('show')) renderCal(); }); });
   })();
 
 })();
