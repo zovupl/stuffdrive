@@ -648,7 +648,6 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       <h3 id="reqTitle"></h3>
       <div class="sub" id="reqSub"></div>
       <div id="reqList"></div>
-      <div class="clear-link" id="clearReq"></div>
     </div>
 
     <!-- info sheet -->
@@ -738,7 +737,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       busyLabel:'Ocupado', busyNow:'Ocupado hasta',
       stNew:'Pendiente', stConfirmed:'Confirmada', stCancelled:'Cancelada', stPast:'Finalizada', stByAdmin:'por el administrador',
       cancelBtn:'Cancelar reserva', cancelAsk:'¿Cancelar esta reserva?', cancelDone:'Reserva cancelada', cancelErr:'No se pudo cancelar. Inténtalo de nuevo.',
-      reqHint:'Un administrador te contactará para confirmar. Puedes cancelar aquí en cualquier momento.',
+      reqHint:'Tus reservas activas. Un administrador te contactará para confirmar; puedes cancelar aquí en cualquier momento.',
       infoTitle:'Información', tabRules:'Cómo funciona', tabServices:'Servicios', contactBtn:'Escribir al administrador',
       howTitle:'Reservar en 1 minuto',
       steps:['<b>Elige el coche</b> — desliza las tarjetas, mira fotos y características.',
@@ -787,7 +786,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       busyLabel:'Booked', busyNow:'Booked until',
       stNew:'Pending', stConfirmed:'Confirmed', stCancelled:'Cancelled', stPast:'Finished', stByAdmin:'by admin',
       cancelBtn:'Cancel booking', cancelAsk:'Cancel this booking?', cancelDone:'Booking cancelled', cancelErr:'Could not cancel. Please try again.',
-      reqHint:'An admin will contact you to confirm. You can cancel here at any time.',
+      reqHint:'Your active bookings. An admin will contact you to confirm; you can cancel here at any time.',
       infoTitle:'Information', tabRules:'How it works', tabServices:'Services', contactBtn:'Message the admin',
       howTitle:'Book in 1 minute',
       steps:['<b>Pick a car</b> — swipe the cards, check photos and specs.',
@@ -836,7 +835,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       busyLabel:'Занято', busyNow:'Занята до',
       stNew:'Ожидает', stConfirmed:'Подтверждена', stCancelled:'Отменена', stPast:'Завершена', stByAdmin:'администратором',
       cancelBtn:'Отменить бронь', cancelAsk:'Отменить эту бронь?', cancelDone:'Бронь отменена', cancelErr:'Не удалось отменить. Попробуйте ещё раз.',
-      reqHint:'Администратор свяжется с вами для подтверждения. Отменить можно здесь в любой момент.',
+      reqHint:'Ваши активные брони. Администратор свяжется с вами для подтверждения; отменить можно здесь в любой момент.',
       infoTitle:'Информация', tabRules:'Как это работает', tabServices:'Услуги', contactBtn:'Написать администратору',
       howTitle:'Бронь за 1 минуту',
       steps:['<b>Выберите машину</b> — листайте карточки, смотрите фото и характеристики.',
@@ -994,10 +993,13 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   const storeMy = list => { try{ localStorage.setItem(MY_BOOKINGS_KEY, JSON.stringify(list.slice(0,50))); }catch(e){} };
   const clearMy = () => { try{ localStorage.removeItem(MY_BOOKINGS_KEY); }catch(e){} };
   function addMy(b){ const l = loadMy(); l.unshift(b); storeMy(l); }
-  function mergeMy(updates){ // обновить статусы своих броней данными с сервера
+  function mergeMy(updates){ // обновить/добавить свои брони данными с сервера; отменённые — убираем из истории
     const l = loadMy();
-    updates.forEach(u=>{ const i = l.findIndex(x=>x.bookingId===u.bookingId); if (i>=0) l[i] = Object.assign({}, l[i], u); });
-    storeMy(l);
+    updates.forEach(u=>{
+      const i = l.findIndex(x=>x.bookingId===u.bookingId);
+      if (i>=0) l[i] = Object.assign({}, l[i], u); else l.push(u);
+    });
+    storeMy(l.filter(b => b.status !== 'cancelled').sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))));
   }
 
   // ================= helpers =================
@@ -1511,9 +1513,10 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   // актуальные статусы своих броней с сервера (подтверждена / отменена админом)
   async function refreshMine(){
     const items = loadMy().filter(b => b.bookingId && b.cancelToken);
-    if (!items.length || !window.NOTIFY_WEBHOOK) return;
+    const initData = (inTG && tg.initData) || '';
+    if ((!items.length && !initData) || !window.NOTIFY_WEBHOOK) return;
     try{
-      const r = await apiPost({type:'client', op:'mine', items: items.map(b=>({bookingId:b.bookingId, token:b.cancelToken}))});
+      const r = await apiPost({type:'client', op:'mine', initData, items: items.map(b=>({bookingId:b.bookingId, token:b.cancelToken}))});
       if (r && r.ok && Array.isArray(r.bookings)){
         mergeMy(r.bookings);
         if (requestsSheet.classList.contains('show')) renderRequests();
@@ -1587,9 +1590,6 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     });
   });
 
-  $('clearReq').addEventListener('click', ()=>{
-    askConfirm(T().clearAsk, ()=>{ clearMy(); renderRequests(); updateMyBadge(); });
-  });
 
   // ================= admin panel =================
   async function adminApi(op, extra){
@@ -1838,7 +1838,6 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     setTxt('confirmBtn', T().confirm);
     setTxt('reqTitle', T().reqTitle);
     setTxt('reqSub', T().reqSub);
-    setTxt('clearReq', T().clear);
     setTxt('stampT1', T().ok1);
     setTxt('stampT2', T().ok2);
     setTxt('dateErr', T().dateErr);
