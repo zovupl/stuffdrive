@@ -750,6 +750,8 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
              ['🧾','<b>Multas y daños</b> durante el alquiler son responsabilidad del conductor según el contrato.'],
              ['❌','<b>Cancelación</b> gratuita desde la app (✓ arriba). Por favor, avisa con al menos 24 h.'],
              ['🚨','<b>Avería o accidente:</b> contacta con el administrador de inmediato.'],
+             ['🔑','<b>Fianza, edad y antigüedad mínima del carnet, límite de kilometraje y seguro:</b> se acuerdan con el administrador al confirmar la reserva.'],
+             ['🔒','<b>Tus datos.</b> El nombre, el teléfono y el usuario de Telegram que indicas al reservar los usa solo StuffDrive (responsable del tratamiento; contacto: @stuffdrive) para gestionar tu reserva. Se guardan en una base de datos protegida y en el calendario de reservas, los ven solo los administradores y no se ceden a terceros. Los conservamos 12 meses después de terminar el alquiler (por posibles multas y reclamaciones) y luego los eliminamos. Para consultarlos o borrarlos antes, escribe a @stuffdrive.'],
              ['🔔','Pulsa <b>Start</b> en @stuffdrivebot para recibir confirmaciones por Telegram.']],
       svcTitle:'Nuestros servicios', svcNote:'Precios y detalles — con el administrador.',
       services:[['✈️','Entrega en aeropuerto / hotel','Llevamos y recogemos el coche donde te convenga: aeropuerto El Prat, estación, hotel.'],
@@ -799,6 +801,8 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
              ['🧾','<b>Fines and damage</b> during the rental are the driver’s responsibility under the contract.'],
              ['❌','<b>Free cancellation</b> in the app (✓ at the top). Please give at least 24 h notice.'],
              ['🚨','<b>Breakdown or accident:</b> contact the admin immediately.'],
+             ['🔑','<b>Deposit, minimum driver age and licence history, mileage limit and insurance:</b> agreed with the admin when the booking is confirmed.'],
+             ['🔒','<b>Your data.</b> The name, phone and Telegram username you enter when booking are used only by StuffDrive (data controller; contact: @stuffdrive) to handle your booking. They are stored in a protected database and the bookings calendar, visible to admins only, and never shared with third parties. We keep them for 12 months after the rental ends (for possible fines and claims) and then delete them. To see or delete your data earlier, message @stuffdrive.'],
              ['🔔','Press <b>Start</b> in @stuffdrivebot to get confirmations in Telegram.']],
       svcTitle:'Our services', svcNote:'Prices and details — ask the admin.',
       services:[['✈️','Airport / hotel delivery','We bring and collect the car wherever suits you: El Prat airport, train station, hotel.'],
@@ -848,6 +852,8 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
              ['🧾','<b>Штрафы и повреждения</b> во время аренды — ответственность водителя по договору.'],
              ['❌','<b>Отмена</b> бесплатно в приложении (✓ вверху). Пожалуйста, предупреждайте минимум за 24 часа.'],
              ['🚨','<b>Поломка или ДТП:</b> сразу свяжитесь с администратором.'],
+             ['🔑','<b>Залог, минимальный возраст и стаж водителя, лимит пробега и страховка:</b> уточняются с администратором при подтверждении брони.'],
+             ['🔒','<b>Ваши данные.</b> Имя, телефон и ник Telegram, указанные при бронировании, использует только StuffDrive (контролёр данных; контакт: @stuffdrive) для работы с вашей бронью. Они хранятся в защищённой базе и в календаре броней, видны только администраторам и третьим лицам не передаются. Храним 12 месяцев после окончания аренды (на случай штрафов и споров), затем удаляем. Посмотреть или удалить свои данные раньше — напишите @stuffdrive.'],
              ['🔔','Нажмите <b>Start</b> у @stuffdrivebot, чтобы получать подтверждения в Telegram.']],
       svcTitle:'Наши услуги', svcNote:'Стоимость и детали — у администратора.',
       services:[['✈️','Подача авто в аэропорт / отель','Привезём и заберём машину там, где вам удобно: аэропорт El Prat, вокзал, отель.'],
@@ -1794,7 +1800,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
   });
   function renderInfo(){
     const L = T();
-    const link = window.SUPPORT_LINK || 'https://t.me/StuffDive';
+    const link = window.SUPPORT_LINK || 'https://t.me/stuffdrive';
     $('infoRules').innerHTML =
       `<div class="info-h">${esc(L.howTitle)}</div>` +
       L.steps.map((t,i)=>`<div class="step"><div class="n">${i+1}</div><div class="t">${t}</div></div>`).join('') +
