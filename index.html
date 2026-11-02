@@ -1107,7 +1107,6 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
       <div class="details">
         <div class="spec-row">${specsHTML(car)}</div>
         <div class="feats">${(car.features||[]).map(f=>`<div class="feat">${esc(trFeat(f))}</div>`).join('')}</div>
-        ${busyLineHTML(car)}
       </div>`;
   }
 
