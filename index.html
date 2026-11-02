@@ -1096,6 +1096,7 @@ body.tg .dots{padding-bottom:calc(10px + var(--safe-bottom));}
     return r ? `<div class="chip-busy">${esc(T().busyNow)} ${esc(fmtD(r.to))}</div>` : '';
   }
   function busyLineHTML(car){
+    if (car.hideBusyLine) return '';
     const r = upcomingBusy(car.id).slice(0,3);
     if (!r.length) return '';
     return `<div class="busy-line"><span>📅</span><span><b>${esc(T().busyLabel)}:</b> ${r.map(x=>esc(fmtRange(x.from,x.to))).join(' · ')}</span></div>`;
